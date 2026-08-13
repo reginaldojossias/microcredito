@@ -1,0 +1,45 @@
+import { redirect } from "next/navigation";
+import { DashboardShell } from "@/components/layout/DashboardShell";
+import { Card } from "@/components/ui/Card";
+import { getNotifications, getSessionProfile } from "@/lib/queries";
+import { formatDateTime } from "@/lib/utils";
+
+export default async function NotificacoesPage() {
+  const { user, profile } = await getSessionProfile();
+  if (!user || !profile) redirect("/login");
+
+  const notifications = await getNotifications(profile.id);
+
+  return (
+    <DashboardShell
+      area="cliente"
+      title="Notificações"
+      subtitle="Confirmações, lembretes de vencimento e avisos de atraso."
+      userName={profile.full_name}
+    >
+      <div className="grid gap-3">
+        {notifications.map((item) => (
+          <Card key={item.id} className={item.read ? "opacity-80" : "border-[#D5D5D5]"}>
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  {!item.read ? <span className="h-2 w-2 rounded-full bg-black" /> : null}
+                  <h3 className="text-[15px] font-semibold">{item.title}</h3>
+                </div>
+                <p className="mt-2 text-[14px] text-[#666]">{item.message}</p>
+              </div>
+              <div className="text-[12px] text-[#999]">
+                {formatDateTime(item.createdAt)}
+              </div>
+            </div>
+          </Card>
+        ))}
+        {!notifications.length ? (
+          <Card>
+            <p className="text-[14px] text-[#666]">Sem notificações.</p>
+          </Card>
+        ) : null}
+      </div>
+    </DashboardShell>
+  );
+}

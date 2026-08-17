@@ -13,21 +13,20 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { StatCard } from "@/components/ui/StatCard";
-import { products as fallbackProducts } from "@/lib/data";
 import { isSupabaseConfigured } from "@/lib/env";
 import { getProducts } from "@/lib/queries";
 import { getServerI18n } from "@/lib/i18n/server";
+import type { CreditProduct } from "@/lib/types";
 
 export default async function HomePage() {
   const { dict, formatCurrency } = await getServerI18n();
 
-  let products = fallbackProducts;
+  let products: CreditProduct[] = [];
   if (isSupabaseConfigured()) {
     try {
       products = await getProducts();
-      if (!products.length) products = fallbackProducts;
     } catch {
-      products = fallbackProducts;
+      products = [];
     }
   }
 
@@ -105,59 +104,72 @@ export default async function HomePage() {
             />
 
             <div className="mt-12 grid gap-3 lg:grid-cols-12">
-              <Card hover className="lg:col-span-7">
-                <div className="k-icon-well mb-5">
-                  <Wallet size={18} />
-                </div>
-                <h3 className="text-[28px] font-bold tracking-[-0.04em]">
-                  {products[0].name}
-                </h3>
-                <p className="mt-3 max-w-xl text-[15px] text-ink-secondary">
-                  {products[0].description}
-                </p>
-                <div className="mt-8 grid gap-4 sm:grid-cols-3">
-                  <div>
-                    <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
-                      {dict.common.amount}
+              {products.length ? (
+                <>
+                  <Card hover className="lg:col-span-7">
+                    <div className="k-icon-well mb-5">
+                      <Wallet size={18} />
                     </div>
-                    <div className="mt-1 text-[15px] font-semibold">
-                      {formatCurrency(products[0].minAmount)} –{" "}
-                      {formatCurrency(products[0].maxAmount)}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
-                      {dict.common.term}
-                    </div>
-                    <div className="mt-1 text-[15px] font-semibold">
-                      {products[0].minTerm}–{products[0].maxTerm} {dict.common.months}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
-                      {dict.common.monthlyRate}
-                    </div>
-                    <div className="mt-1 text-[15px] font-semibold">
-                      {products[0].interestRate}%
-                    </div>
-                  </div>
-                </div>
-              </Card>
-
-              <div className="grid gap-3 lg:col-span-5">
-                {products.slice(1).map((product) => (
-                  <Card key={product.id} hover>
-                    <h3 className="text-[20px] font-bold tracking-[-0.04em]">
-                      {product.name}
+                    <h3 className="text-[28px] font-bold tracking-[-0.04em]">
+                      {products[0].name}
                     </h3>
-                    <p className="mt-2 text-[14px] text-ink-secondary">{product.description}</p>
-                    <div className="mt-4 text-[12px] text-ink-tertiary">
-                      {dict.common.upTo} {formatCurrency(product.maxAmount)} · {product.minTerm}–
-                      {product.maxTerm} {dict.common.months}
+                    <p className="mt-3 max-w-xl text-[15px] text-ink-secondary">
+                      {products[0].description}
+                    </p>
+                    <div className="mt-8 grid gap-4 sm:grid-cols-3">
+                      <div>
+                        <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
+                          {dict.common.amount}
+                        </div>
+                        <div className="mt-1 text-[15px] font-semibold">
+                          {formatCurrency(products[0].minAmount)} –{" "}
+                          {formatCurrency(products[0].maxAmount)}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
+                          {dict.common.term}
+                        </div>
+                        <div className="mt-1 text-[15px] font-semibold">
+                          {products[0].minTerm}–{products[0].maxTerm}{" "}
+                          {dict.common.months}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
+                          {dict.common.monthlyRate}
+                        </div>
+                        <div className="mt-1 text-[15px] font-semibold">
+                          {products[0].interestRate}%
+                        </div>
+                      </div>
                     </div>
                   </Card>
-                ))}
-              </div>
+
+                  <div className="grid gap-3 lg:col-span-5">
+                    {products.slice(1).map((product) => (
+                      <Card key={product.id} hover>
+                        <h3 className="text-[20px] font-bold tracking-[-0.04em]">
+                          {product.name}
+                        </h3>
+                        <p className="mt-2 text-[14px] text-ink-secondary">
+                          {product.description}
+                        </p>
+                        <div className="mt-4 text-[12px] text-ink-tertiary">
+                          {dict.common.upTo} {formatCurrency(product.maxAmount)} ·{" "}
+                          {product.minTerm}–{product.maxTerm} {dict.common.months}
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <Card className="lg:col-span-12">
+                  <p className="text-[14px] text-ink-secondary">
+                    {dict.home.productsEmpty}
+                  </p>
+                </Card>
+              )}
             </div>
           </div>
         </section>

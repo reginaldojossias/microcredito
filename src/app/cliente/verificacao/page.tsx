@@ -11,6 +11,10 @@ export default async function VerificacaoPage() {
 
   const { dict } = await getServerI18n();
   const client = mapProfile(profile);
+  const schemaReady = Object.prototype.hasOwnProperty.call(
+    profile,
+    "verification_status",
+  );
 
   return (
     <DashboardShell
@@ -20,6 +24,7 @@ export default async function VerificacaoPage() {
       userName={client.name}
     >
       <VerificationForm
+        schemaReady={schemaReady}
         verificationStatus={client.verificationStatus}
         prefill={{
           fullName: client.name,

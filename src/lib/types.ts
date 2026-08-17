@@ -2,6 +2,33 @@ export type UserRole = "cliente" | "admin" | "analista" | "gestor";
 
 export type DocumentStatus = "pendente" | "em_analise" | "aprovado" | "rejeitado" | "corrigir";
 
+export type VerificationStatus =
+  | "nao_verificado"
+  | "em_analise"
+  | "verificado"
+  | "rejeitado";
+
+export type IdDocumentType =
+  | "BI"
+  | "Passaporte"
+  | "carta_conducao"
+  | "cartao_eleitor";
+
+export const ID_DOCUMENT_TYPES: { value: IdDocumentType; labelPt: string; labelEn: string }[] = [
+  { value: "BI", labelPt: "BI", labelEn: "National ID (BI)" },
+  { value: "Passaporte", labelPt: "Passaporte", labelEn: "Passport" },
+  {
+    value: "carta_conducao",
+    labelPt: "Carta de condução",
+    labelEn: "Driver's licence",
+  },
+  {
+    value: "cartao_eleitor",
+    labelPt: "Cartão de eleitor",
+    labelEn: "Voter card",
+  },
+];
+
 export type LoanApplicationStatus =
   | "rascunho"
   | "enviado"
@@ -36,10 +63,16 @@ export interface Client {
   phone: string;
   address: string;
   idDocument: string;
+  idDocumentType: string;
+  dateOfBirth: string;
+  province: string;
+  district: string;
+  neighborhood: string;
   profession: string;
   income: number;
   createdAt: string;
   status: "activo" | "pendente" | "bloqueado";
+  verificationStatus: VerificationStatus;
 }
 
 export interface DocumentItem {

@@ -26,9 +26,19 @@ export type Database = {
           phone: string | null;
           address: string | null;
           id_document: string | null;
+          id_document_type: string | null;
+          date_of_birth: string | null;
+          province: string | null;
+          district: string | null;
+          neighborhood: string | null;
           profession: string | null;
           income: number;
           status: "activo" | "pendente" | "bloqueado";
+          verification_status:
+            | "nao_verificado"
+            | "em_analise"
+            | "verificado"
+            | "rejeitado";
           created_at: string;
           updated_at: string;
         };
@@ -40,9 +50,19 @@ export type Database = {
           phone?: string | null;
           address?: string | null;
           id_document?: string | null;
+          id_document_type?: string | null;
+          date_of_birth?: string | null;
+          province?: string | null;
+          district?: string | null;
+          neighborhood?: string | null;
           profession?: string | null;
           income?: number;
           status?: "activo" | "pendente" | "bloqueado";
+          verification_status?:
+            | "nao_verificado"
+            | "em_analise"
+            | "verificado"
+            | "rejeitado";
           created_at?: string;
           updated_at?: string;
         };
@@ -54,9 +74,19 @@ export type Database = {
           phone?: string | null;
           address?: string | null;
           id_document?: string | null;
+          id_document_type?: string | null;
+          date_of_birth?: string | null;
+          province?: string | null;
+          district?: string | null;
+          neighborhood?: string | null;
           profession?: string | null;
           income?: number;
           status?: "activo" | "pendente" | "bloqueado";
+          verification_status?:
+            | "nao_verificado"
+            | "em_analise"
+            | "verificado"
+            | "rejeitado";
           created_at?: string;
           updated_at?: string;
         };

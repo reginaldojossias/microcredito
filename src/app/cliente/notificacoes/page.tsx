@@ -1,13 +1,14 @@
 import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/layout/DashboardShell";
 import { Card } from "@/components/ui/Card";
+import { getServerI18n } from "@/lib/i18n/server";
 import { getNotifications, getSessionProfile } from "@/lib/queries";
-import { formatDateTime } from "@/lib/utils";
 
 export default async function NotificacoesPage() {
   const { user, profile } = await getSessionProfile();
   if (!user || !profile) redirect("/login");
 
+  const { formatDateTime } = await getServerI18n();
   const notifications = await getNotifications(profile.id);
 
   return (

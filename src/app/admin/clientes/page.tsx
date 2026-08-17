@@ -2,13 +2,14 @@ import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/layout/DashboardShell";
 import { Card } from "@/components/ui/Card";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { getServerI18n } from "@/lib/i18n/server";
 import { getClients, getSessionProfile } from "@/lib/queries";
-import { formatCurrency, formatDate } from "@/lib/utils";
 
 export default async function AdminClientesPage() {
   const { user, profile } = await getSessionProfile();
   if (!user || !profile) redirect("/login");
 
+  const { formatCurrency, formatDate } = await getServerI18n();
   const clients = await getClients();
 
   return (
@@ -34,6 +35,7 @@ export default async function AdminClientesPage() {
               <th className="px-5 py-4 font-medium">Rendimento</th>
               <th className="px-5 py-4 font-medium">Desde</th>
               <th className="px-5 py-4 font-medium">Estado</th>
+              <th className="px-5 py-4 font-medium">Verificação</th>
             </tr>
           </thead>
           <tbody>
@@ -51,6 +53,9 @@ export default async function AdminClientesPage() {
                 <td className="px-5 py-4">{formatDate(client.createdAt)}</td>
                 <td className="px-5 py-4">
                   <StatusPill status={client.status} />
+                </td>
+                <td className="px-5 py-4">
+                  <StatusPill status={client.verificationStatus} />
                 </td>
               </tr>
             ))}

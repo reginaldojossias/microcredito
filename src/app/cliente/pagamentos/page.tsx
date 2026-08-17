@@ -3,13 +3,14 @@ import { DashboardShell } from "@/components/layout/DashboardShell";
 import { RegisterPaymentForm } from "@/components/forms/RegisterPaymentForm";
 import { Card } from "@/components/ui/Card";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { getServerI18n } from "@/lib/i18n/server";
 import { getLoans, getPayments, getSessionProfile } from "@/lib/queries";
-import { formatCurrency, formatDate } from "@/lib/utils";
 
 export default async function PagamentosClientePage() {
   const { user, profile } = await getSessionProfile();
   if (!user || !profile) redirect("/login");
 
+  const { formatCurrency, formatDate } = await getServerI18n();
   const [list, loans] = await Promise.all([
     getPayments(profile.id),
     getLoans(profile.id),

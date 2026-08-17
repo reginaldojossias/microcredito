@@ -6,7 +6,9 @@ Plataforma web de gestão de microcrédito com **Supabase** (Auth + Postgres).
 
 1. Crie um projecto em [supabase.com](https://supabase.com/dashboard)
 2. Copie `.env.local.example` → `.env.local` e preencha as chaves
-3. No SQL Editor do Supabase, execute `supabase/migrations/001_schema.sql`
+3. No SQL Editor do Supabase, execute nesta ordem:
+   - `supabase/migrations/001_schema.sql`
+   - `supabase/migrations/002_profile_verification.sql`
 4. Popule dados demo:
    ```bash
    npm install
@@ -20,8 +22,8 @@ Guia completo: [SUPABASE.md](./SUPABASE.md)
 
 | Email | Password | Área |
 |-------|----------|------|
-| admin@kukula.ao | demo1234 | `/admin` |
-| analista@kukula.ao | demo1234 | `/admin` |
+| admin@kukula.co.mz | demo1234 | `/admin` |
+| analista@kukula.co.mz | demo1234 | `/admin` |
 | maria.fernandes@email.com | demo1234 | `/cliente` |
 
 ## Stack

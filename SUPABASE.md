@@ -18,11 +18,14 @@ SUPABASE_SERVICE_ROLE_KEY=eyJ...
 ```
 
 ## 3. Criar tabelas
-No Supabase: **SQL Editor → New query**, cole e execute o ficheiro:
+No Supabase: **SQL Editor → New query**, cole e execute os ficheiros nesta ordem:
 
-`supabase/migrations/001_schema.sql`
+1. `supabase/migrations/001_schema.sql`
+2. `supabase/migrations/002_profile_verification.sql`
 
-Isto cria enums, tabelas, RLS, triggers, produtos e definições de cobrança.
+Isto cria enums, tabelas, RLS, triggers, produtos, definições de cobrança, campos de verificação de perfil e o bucket Storage `client-documents`.
+
+Se o projecto já tinha a migration `001`, execute apenas a `002`.
 
 ## 4. Popular dados demo
 ```bash
@@ -32,8 +35,8 @@ npm run seed
 Contas:
 | Email | Password | Papel |
 |-------|----------|-------|
-| admin@kukula.ao | demo1234 | Admin |
-| analista@kukula.ao | demo1234 | Analista |
+| admin@kukula.co.mz | demo1234 | Admin |
+| analista@kukula.co.mz | demo1234 | Analista |
 | maria.fernandes@email.com | demo1234 | Cliente |
 
 ## 5. Auth

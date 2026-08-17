@@ -1,33 +1,42 @@
-export function formatCurrency(value: number): string {
-  return new Intl.NumberFormat("pt-AO", {
+import { APP_CURRENCY, APP_TIMEZONE, localeToIntl } from "@/lib/locale-config";
+import type { Locale } from "@/lib/i18n/types";
+
+export function formatCurrency(value: number, locale: Locale = "pt"): string {
+  const formatted = new Intl.NumberFormat(localeToIntl[locale], {
     style: "currency",
-    currency: "AOA",
+    currency: APP_CURRENCY,
     maximumFractionDigits: 0,
-  })
-    .format(value)
-    .replace("AOA", "Kz");
+  }).format(value);
+
+  if (locale === "pt") {
+    return formatted.replace(/\s?MTn?\.?/i, " MT").replace(/\s?MZN/i, " MT");
+  }
+
+  return formatted;
 }
 
-export function formatDate(value: string): string {
+export function formatDate(value: string, locale: Locale = "pt"): string {
   if (!value || value === "—") return "—";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
-  return new Intl.DateTimeFormat("pt-PT", {
+  return new Intl.DateTimeFormat(localeToIntl[locale], {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
+    timeZone: APP_TIMEZONE,
   }).format(date);
 }
 
-export function formatDateTime(value: string): string {
+export function formatDateTime(value: string, locale: Locale = "pt"): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
-  return new Intl.DateTimeFormat("pt-PT", {
+  return new Intl.DateTimeFormat(localeToIntl[locale], {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
+    timeZone: APP_TIMEZONE,
   }).format(date);
 }
 
@@ -47,4 +56,10 @@ export function simulateLoan(amount: number, term: number, monthlyRate: number) 
     totalPayable: Math.round(total),
     totalInterest: Math.round(total - amount),
   };
+}
+
+export function isProfileVerified(
+  profile: { verification_status?: string | null } | null | undefined,
+): boolean {
+  return profile?.verification_status === "verificado";
 }

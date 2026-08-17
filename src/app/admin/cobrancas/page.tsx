@@ -8,11 +8,13 @@ import {
   getLoans,
   getSessionProfile,
 } from "@/lib/queries";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { getServerI18n } from "@/lib/i18n/server";
 
 export default async function AdminCobrancasPage() {
   const { user, profile } = await getSessionProfile();
   if (!user || !profile) redirect("/login");
+
+  const { formatCurrency, formatDate } = await getServerI18n();
 
   const [loans, settings] = await Promise.all([
     getLoans(),

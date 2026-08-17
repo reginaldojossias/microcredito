@@ -3,13 +3,14 @@ import { DashboardShell } from "@/components/layout/DashboardShell";
 import { ConfirmDisbursementButton } from "@/components/forms/ConfirmDisbursementButton";
 import { Card } from "@/components/ui/Card";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { getServerI18n } from "@/lib/i18n/server";
 import { getDisbursements, getSessionProfile } from "@/lib/queries";
-import { formatCurrency } from "@/lib/utils";
 
 export default async function AdminDesembolsosPage() {
   const { user, profile } = await getSessionProfile();
   if (!user || !profile) redirect("/login");
 
+  const { formatCurrency } = await getServerI18n();
   const items = await getDisbursements();
 
   return (

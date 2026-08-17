@@ -1,18 +1,23 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Plus } from "lucide-react";
 import { DashboardShell } from "@/components/layout/DashboardShell";
+import { RequestLoanGate } from "@/components/RequestLoanGate";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { getServerI18n } from "@/lib/i18n/server";
 import { getApplications, getSessionProfile } from "@/lib/queries";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import type { VerificationStatus } from "@/lib/types";
 
 export default async function PedidosPage() {
   const { user, profile } = await getSessionProfile();
   if (!user || !profile) redirect("/login");
 
+  const { formatCurrency, formatDate } = await getServerI18n();
   const list = await getApplications(profile.id);
+  const verificationStatus =
+    (profile.verification_status as VerificationStatus | undefined) ??
+    "nao_verificado";
 
   return (
     <DashboardShell
@@ -22,12 +27,12 @@ export default async function PedidosPage() {
       userName={profile.full_name}
     >
       <div className="mb-6 flex justify-end">
-        <Link href="/cliente/pedidos/novo">
+        <RequestLoanGate verificationStatus={verificationStatus}>
           <Button>
             <Plus size={16} />
             Novo pedido
           </Button>
-        </Link>
+        </RequestLoanGate>
       </div>
 
       <div className="grid gap-3">

@@ -3,13 +3,14 @@ import { DashboardShell } from "@/components/layout/DashboardShell";
 import { DocumentReviewActions } from "@/components/forms/DocumentReviewActions";
 import { Card } from "@/components/ui/Card";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { getServerI18n } from "@/lib/i18n/server";
 import { getClients, getDocuments, getSessionProfile } from "@/lib/queries";
-import { formatDate } from "@/lib/utils";
 
 export default async function AdminDocumentosPage() {
   const { user, profile } = await getSessionProfile();
   if (!user || !profile) redirect("/login");
 
+  const { formatDate } = await getServerI18n();
   const [documents, clients] = await Promise.all([getDocuments(), getClients()]);
   const clientName = Object.fromEntries(clients.map((c) => [c.id, c.name]));
 

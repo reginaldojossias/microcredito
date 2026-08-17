@@ -7,12 +7,13 @@ import {
   getAuditLogs,
   getSessionProfile,
 } from "@/lib/queries";
-import { formatCurrency, formatDateTime } from "@/lib/utils";
+import { getServerI18n } from "@/lib/i18n/server";
 
 export default async function AdminRelatoriosPage() {
   const { user, profile } = await getSessionProfile();
   if (!user || !profile) redirect("/login");
 
+  const { formatCurrency, formatDateTime } = await getServerI18n();
   const [stats, auditLog] = await Promise.all([getAdminStats(), getAuditLogs()]);
 
   return (

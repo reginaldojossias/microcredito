@@ -3,13 +3,14 @@ import { DashboardShell } from "@/components/layout/DashboardShell";
 import { CreateDocumentForm } from "@/components/forms/CreateDocumentForm";
 import { Card } from "@/components/ui/Card";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { getServerI18n } from "@/lib/i18n/server";
 import { getDocuments, getSessionProfile } from "@/lib/queries";
-import { formatDate } from "@/lib/utils";
 
 export default async function DocumentosPage() {
   const { user, profile } = await getSessionProfile();
   if (!user || !profile) redirect("/login");
 
+  const { formatDate } = await getServerI18n();
   const docs = await getDocuments(profile.id);
 
   return (

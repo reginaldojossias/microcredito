@@ -3,16 +3,22 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useTransition } from "react";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { signUpAction } from "@/lib/actions";
+import { useI18n } from "@/lib/i18n/context";
 
 export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const { dict } = useI18n();
 
   return (
     <div className="geo-bg flex min-h-screen items-center justify-center px-5 py-12">
+      <div className="absolute right-5 top-5">
+        <LanguageSwitcher />
+      </div>
       <div className="w-full max-w-[560px]">
         <div className="mb-8 text-center">
           <Link href="/" className="inline-flex flex-col items-center gap-3">
@@ -26,17 +32,15 @@ export default function RegisterPage() {
             <div>
               <div className="text-[22px] font-bold tracking-[-0.04em]">KUKULA</div>
               <div className="text-[11px] uppercase tracking-[0.12em] text-[#999]">
-                Criar conta segura
+                {dict.auth.registerSubtitle}
               </div>
             </div>
           </Link>
         </div>
 
         <Card>
-          <h1 className="text-[28px] font-bold tracking-[-0.04em]">Criar conta</h1>
-          <p className="mt-2 text-[14px] text-[#666]">
-            Os dados são gravados no Supabase Auth e no perfil do cliente.
-          </p>
+          <h1 className="text-[28px] font-bold tracking-[-0.04em]">{dict.auth.registerTitle}</h1>
+          <p className="mt-2 text-[14px] text-[#666]">{dict.auth.registerHint}</p>
 
           <form
             className="mt-6 grid gap-4 sm:grid-cols-2"
@@ -46,7 +50,7 @@ export default function RegisterPage() {
                 const password = String(formData.get("password") ?? "");
                 const confirm = String(formData.get("confirm") ?? "");
                 if (password !== confirm) {
-                  setError("As palavras-passe não coincidem.");
+                  setError(dict.auth.passwordMismatch);
                   return;
                 }
                 const result = await signUpAction(formData);
@@ -55,16 +59,16 @@ export default function RegisterPage() {
             }}
           >
             <div className="sm:col-span-2">
-              <label className="mb-1.5 block text-[12px] text-[#666]">Nome completo</label>
+              <label className="mb-1.5 block text-[12px] text-[#666]">{dict.auth.fullName}</label>
               <input
                 required
                 name="full_name"
                 className="w-full rounded-xl border border-[#E5E5E5] px-4 py-3 text-[14px] outline-none focus:border-[#111]"
-                placeholder="Ex.: Maria Fernandes"
+                placeholder={dict.auth.fullNamePlaceholder}
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-[12px] text-[#666]">Email</label>
+              <label className="mb-1.5 block text-[12px] text-[#666]">{dict.common.email}</label>
               <input
                 required
                 name="email"
@@ -73,16 +77,16 @@ export default function RegisterPage() {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-[12px] text-[#666]">Telefone</label>
+              <label className="mb-1.5 block text-[12px] text-[#666]">{dict.common.phone}</label>
               <input
                 required
                 name="phone"
                 className="w-full rounded-xl border border-[#E5E5E5] px-4 py-3 text-[14px] outline-none focus:border-[#111]"
-                placeholder="+244 ..."
+                placeholder={dict.auth.phonePlaceholder}
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-[12px] text-[#666]">Documento de ID</label>
+              <label className="mb-1.5 block text-[12px] text-[#666]">{dict.auth.idDocument}</label>
               <input
                 required
                 name="id_document"
@@ -90,7 +94,7 @@ export default function RegisterPage() {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-[12px] text-[#666]">Profissão</label>
+              <label className="mb-1.5 block text-[12px] text-[#666]">{dict.auth.profession}</label>
               <input
                 required
                 name="profession"
@@ -98,7 +102,7 @@ export default function RegisterPage() {
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="mb-1.5 block text-[12px] text-[#666]">Morada</label>
+              <label className="mb-1.5 block text-[12px] text-[#666]">{dict.auth.address}</label>
               <input
                 required
                 name="address"
@@ -106,7 +110,7 @@ export default function RegisterPage() {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-[12px] text-[#666]">Palavra-passe</label>
+              <label className="mb-1.5 block text-[12px] text-[#666]">{dict.common.password}</label>
               <input
                 required
                 name="password"
@@ -116,7 +120,7 @@ export default function RegisterPage() {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-[12px] text-[#666]">Confirmar</label>
+              <label className="mb-1.5 block text-[12px] text-[#666]">{dict.common.confirm}</label>
               <input
                 required
                 name="confirm"
@@ -125,20 +129,18 @@ export default function RegisterPage() {
                 className="w-full rounded-xl border border-[#E5E5E5] px-4 py-3 text-[14px] outline-none focus:border-[#111]"
               />
             </div>
-            {error ? (
-              <p className="sm:col-span-2 text-[13px] text-[#777]">{error}</p>
-            ) : null}
+            {error ? <p className="sm:col-span-2 text-[13px] text-[#777]">{error}</p> : null}
             <div className="sm:col-span-2 pt-2">
               <Button type="submit" className="w-full" disabled={pending}>
-                {pending ? "A criar..." : "Criar conta e continuar"}
+                {pending ? dict.auth.creating : dict.auth.createAndContinue}
               </Button>
             </div>
           </form>
 
           <p className="mt-6 text-center text-[13px] text-[#666]">
-            Já tem conta?{" "}
+            {dict.auth.hasAccount}{" "}
             <Link href="/login" className="font-medium text-black hover:underline">
-              Entrar
+              {dict.auth.signIn}
             </Link>
           </p>
         </Card>

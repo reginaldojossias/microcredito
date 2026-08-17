@@ -3,10 +3,12 @@
 import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/Button";
 import { registerPaymentAction } from "@/lib/actions";
+import { useI18n } from "@/lib/i18n/context";
 import type { Loan } from "@/lib/types";
-import { formatCurrency } from "@/lib/utils";
+import { simulateLoan } from "@/lib/utils";
 
 export function RegisterPaymentForm({ loans }: { loans: Loan[] }) {
+  const { formatCurrency } = useI18n();
   const [error, setError] = useState<string | null>(null);
   const [ok, setOk] = useState(false);
   const [pending, startTransition] = useTransition();

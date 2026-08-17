@@ -8,7 +8,7 @@ import {
   getDocuments,
   getSessionProfile,
 } from "@/lib/queries";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { getServerI18n } from "@/lib/i18n/server";
 
 export default async function AdminPedidoDetalhePage({
   params,
@@ -19,6 +19,7 @@ export default async function AdminPedidoDetalhePage({
   const { user, profile } = await getSessionProfile();
   if (!user || !profile) redirect("/login");
 
+  const { formatCurrency, formatDate } = await getServerI18n();
   const app = await getApplicationById(id);
   if (!app) notFound();
 

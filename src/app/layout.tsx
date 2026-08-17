@@ -1,23 +1,31 @@
 import type { Metadata } from "next";
 import { SetupBanner } from "@/components/SetupBanner";
+import { Providers } from "@/components/Providers";
 import { isSupabaseConfigured } from "@/lib/env";
+import { getDictionary } from "@/lib/i18n";
+import { getLocale } from "@/lib/i18n/server";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: "Kukula Microcrédito E.I",
-  description:
-    "Plataforma de gestão de microcrédito — do cadastro ao desembolso, pagamentos e liquidação.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const dict = getDictionary(locale);
 
-export default function RootLayout({
+  return {
+    title: dict.meta.title,
+    description: dict.meta.description,
+  };
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const configured = isSupabaseConfigured();
+  const locale = await getLocale();
 
   return (
-    <html lang="pt">
+    <html lang={locale}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -27,10 +35,11 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen font-sans antialiased">
-        {!configured ? <SetupBanner /> : null}
-        {children}
+        <Providers initialLocale={locale}>
+          {!configured ? <SetupBanner /> : null}
+          {children}
+        </Providers>
       </body>
     </html>
   );
 }
-

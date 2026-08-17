@@ -1,4 +1,7 @@
+"use client";
+
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n/context";
 
 const statusStyles: Record<string, string> = {
   pendente: "bg-[#F4F4F4] text-[#555] border-[#E7E7E7]",
@@ -21,29 +24,8 @@ const statusStyles: Record<string, string> = {
   desembolso_pendente: "bg-[#F4F4F4] text-[#555] border-[#E7E7E7]",
   rascunho: "bg-[#F4F4F4] text-[#555] border-[#E7E7E7]",
   bloqueado: "bg-[#FAFAFA] text-[#777] border-[#E7E7E7]",
-};
-
-const labels: Record<string, string> = {
-  pendente: "Pendente",
-  em_analise: "Em análise",
-  aprovado: "Aprovado",
-  rejeitado: "Rejeitado",
-  corrigir: "Corrigir",
-  info_adicional: "Info. adicional",
-  activo: "Activo",
-  em_atraso: "Em atraso",
-  liquidado: "Liquidado",
-  pago: "Pago",
-  atrasado: "Atrasado",
-  parcial: "Parcial",
-  confirmado: "Confirmado",
-  falhado: "Falhado",
-  enviado: "Enviado",
-  contrato_pendente: "Contrato pendente",
-  contrato_aceite: "Contrato aceite",
-  desembolso_pendente: "Desembolso pendente",
-  rascunho: "Rascunho",
-  bloqueado: "Bloqueado",
+  nao_verificado: "bg-[#FFF5F5] text-[#B42318] border-[#F5C2C2]",
+  verificado: "bg-black text-white border-black",
 };
 
 export function StatusPill({
@@ -53,6 +35,8 @@ export function StatusPill({
   status: string;
   className?: string;
 }) {
+  const { statusLabel } = useI18n();
+
   return (
     <span
       className={cn(
@@ -61,7 +45,7 @@ export function StatusPill({
         className,
       )}
     >
-      {labels[status] ?? status}
+      {statusLabel(status)}
     </span>
   );
 }

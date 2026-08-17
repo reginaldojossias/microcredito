@@ -5,10 +5,12 @@ import { useMemo, useState, useTransition } from "react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { createLoanApplicationAction } from "@/lib/actions";
+import { useI18n } from "@/lib/i18n/context";
 import type { CreditProduct } from "@/lib/types";
-import { formatCurrency, simulateLoan } from "@/lib/utils";
+import { simulateLoan } from "@/lib/utils";
 
 export function NovoPedidoForm({ products }: { products: CreditProduct[] }) {
+  const { formatCurrency } = useI18n();
   const [productId, setProductId] = useState(products[0]?.id ?? "");
   const [amount, setAmount] = useState(products[0]?.minAmount ?? 100000);
   const [term, setTerm] = useState(products[0]?.minTerm ?? 6);
@@ -131,7 +133,17 @@ export function NovoPedidoForm({ products }: { products: CreditProduct[] }) {
               className="w-full rounded-xl border border-[#E5E5E5] px-4 py-3 text-[14px] outline-none focus:border-[#111]"
             />
           </div>
-          {error ? <p className="text-[13px] text-[#777]">{error}</p> : null}
+          {error ? (
+            <p
+              className={
+                error.includes("não está verificado") || error.includes("not verified")
+                  ? "text-[13px] text-[#B42318]"
+                  : "text-[13px] text-[#777]"
+              }
+            >
+              {error}
+            </p>
+          ) : null}
           <Button type="submit" disabled={pending} className="w-full sm:w-auto">
             {pending ? "A enviar..." : "Enviar pedido"}
           </Button>

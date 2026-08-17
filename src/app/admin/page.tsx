@@ -4,6 +4,7 @@ import { DashboardShell } from "@/components/layout/DashboardShell";
 import { Card } from "@/components/ui/Card";
 import { StatCard } from "@/components/ui/StatCard";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { getServerI18n } from "@/lib/i18n/server";
 import {
   getAdminStats,
   getApplications,
@@ -11,12 +12,12 @@ import {
   getLoans,
   getSessionProfile,
 } from "@/lib/queries";
-import { formatCurrency, formatDateTime } from "@/lib/utils";
 
 export default async function AdminDashboardPage() {
   const { user, profile } = await getSessionProfile();
   if (!user || !profile) redirect("/login");
 
+  const { dict, formatCurrency, formatDateTime } = await getServerI18n();
   const [stats, applications, loans, auditLog] = await Promise.all([
     getAdminStats(),
     getApplications(),
@@ -34,31 +35,34 @@ export default async function AdminDashboardPage() {
   return (
     <DashboardShell
       area="admin"
-      title="Painel operacional"
-      subtitle="Indicadores da operação de microcrédito em tempo real."
+      title={dict.admin.operationalPanel}
+      subtitle={dict.admin.operationalSubtitle}
       userName={profile.full_name}
     >
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         <StatCard
-          label="Carteira activa"
+          label={dict.admin.activePortfolio}
           value={`${(stats.carteiraActiva / 1_000_000).toFixed(1)}M`}
           hint={formatCurrency(stats.carteiraActiva)}
         />
-        <StatCard label="Pedidos pendentes" value={String(stats.pedidosPendentes)} />
         <StatCard
-          label="Desembolsos do mês"
+          label={dict.admin.pendingApplications}
+          value={String(stats.pedidosPendentes)}
+        />
+        <StatCard
+          label={dict.admin.monthlyDisbursements}
           value={`${(stats.desembolsosMes / 1_000_000).toFixed(1)}M`}
           hint={formatCurrency(stats.desembolsosMes)}
         />
-        <StatCard label="Inadimplência" value={`${stats.taxaInadimplencia}%`} />
+        <StatCard label={dict.admin.delinquency} value={`${stats.taxaInadimplencia}%`} />
       </div>
 
       <div className="mt-4 grid gap-4 xl:grid-cols-3">
         <Card className="xl:col-span-2">
           <div className="mb-5 flex items-center justify-between">
-            <h3 className="text-[18px] font-bold tracking-[-0.03em]">Fila de análise</h3>
+            <h3 className="text-[18px] font-bold tracking-[-0.03em]">{dict.admin.analysisQueue}</h3>
             <Link href="/admin/pedidos" className="text-[13px] font-medium">
-              Ver todos →
+              {dict.client.viewAll} →
             </Link>
           </div>
           <div className="space-y-3">
@@ -78,14 +82,14 @@ export default async function AdminDashboardPage() {
               </Link>
             ))}
             {!queue.length ? (
-              <p className="text-[14px] text-[#666]">Fila vazia.</p>
+              <p className="text-[14px] text-[#666]">{dict.admin.emptyQueue}</p>
             ) : null}
           </div>
         </Card>
 
         <Card>
           <h3 className="mb-5 text-[18px] font-bold tracking-[-0.03em]">
-            Empréstimos em atraso
+            {dict.admin.overdueLoans}
           </h3>
           <div className="space-y-3">
             {overdue.map((loan) => (
@@ -98,17 +102,17 @@ export default async function AdminDashboardPage() {
               </div>
             ))}
             {!overdue.length ? (
-              <p className="text-[14px] text-[#666]">Sem atrasos.</p>
+              <p className="text-[14px] text-[#666]">{dict.admin.noOverdue}</p>
             ) : null}
             <Link href="/admin/cobrancas" className="inline-block text-[13px] font-medium">
-              Abrir cobranças →
+              {dict.admin.openCollectionsLink} →
             </Link>
           </div>
         </Card>
       </div>
 
       <Card className="mt-4">
-        <h3 className="mb-5 text-[18px] font-bold tracking-[-0.03em]">Auditoria recente</h3>
+        <h3 className="mb-5 text-[18px] font-bold tracking-[-0.03em]">{dict.admin.recentAudit}</h3>
         <div className="space-y-3">
           {auditLog.map((entry) => (
             <div

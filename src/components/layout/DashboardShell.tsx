@@ -20,8 +20,11 @@ import {
   AlertTriangle,
   BarChart3,
   Banknote,
+  ShieldCheck,
 } from "lucide-react";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { signOutAction } from "@/lib/actions";
+import { useI18n } from "@/lib/i18n/context";
 import { cn } from "@/lib/utils";
 
 type NavItem = {
@@ -29,28 +32,6 @@ type NavItem = {
   label: string;
   icon: React.ComponentType<{ size?: number; className?: string }>;
 };
-
-const clientNav: NavItem[] = [
-  { href: "/cliente", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/cliente/documentos", label: "Documentos", icon: FileText },
-  { href: "/cliente/pedidos", label: "Pedidos", icon: ClipboardList },
-  { href: "/cliente/emprestimos", label: "Empréstimos", icon: Wallet },
-  { href: "/cliente/pagamentos", label: "Pagamentos", icon: Receipt },
-  { href: "/cliente/notificacoes", label: "Notificações", icon: Bell },
-  { href: "/cliente/perfil", label: "Perfil", icon: UserRound },
-];
-
-const adminNav: NavItem[] = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/clientes", label: "Clientes", icon: Users },
-  { href: "/admin/documentos", label: "Documentos", icon: FileText },
-  { href: "/admin/pedidos", label: "Pedidos", icon: ClipboardList },
-  { href: "/admin/emprestimos", label: "Empréstimos", icon: Wallet },
-  { href: "/admin/desembolsos", label: "Desembolsos", icon: Banknote },
-  { href: "/admin/pagamentos", label: "Pagamentos", icon: Receipt },
-  { href: "/admin/cobrancas", label: "Cobranças", icon: AlertTriangle },
-  { href: "/admin/relatorios", label: "Relatórios", icon: BarChart3 },
-];
 
 export function DashboardShell({
   area,
@@ -68,6 +49,31 @@ export function DashboardShell({
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
+  const { dict } = useI18n();
+
+  const clientNav: NavItem[] = [
+    { href: "/cliente", label: dict.dashboard.clientNav.dashboard, icon: LayoutDashboard },
+    { href: "/cliente/verificacao", label: dict.dashboard.clientNav.verification, icon: ShieldCheck },
+    { href: "/cliente/documentos", label: dict.dashboard.clientNav.documents, icon: FileText },
+    { href: "/cliente/pedidos", label: dict.dashboard.clientNav.applications, icon: ClipboardList },
+    { href: "/cliente/emprestimos", label: dict.dashboard.clientNav.loans, icon: Wallet },
+    { href: "/cliente/pagamentos", label: dict.dashboard.clientNav.payments, icon: Receipt },
+    { href: "/cliente/notificacoes", label: dict.dashboard.clientNav.notifications, icon: Bell },
+    { href: "/cliente/perfil", label: dict.dashboard.clientNav.profile, icon: UserRound },
+  ];
+
+  const adminNav: NavItem[] = [
+    { href: "/admin", label: dict.dashboard.adminNav.dashboard, icon: LayoutDashboard },
+    { href: "/admin/clientes", label: dict.dashboard.adminNav.clients, icon: Users },
+    { href: "/admin/documentos", label: dict.dashboard.adminNav.documents, icon: FileText },
+    { href: "/admin/pedidos", label: dict.dashboard.adminNav.applications, icon: ClipboardList },
+    { href: "/admin/emprestimos", label: dict.dashboard.adminNav.loans, icon: Wallet },
+    { href: "/admin/desembolsos", label: dict.dashboard.adminNav.disbursements, icon: Banknote },
+    { href: "/admin/pagamentos", label: dict.dashboard.adminNav.payments, icon: Receipt },
+    { href: "/admin/cobrancas", label: dict.dashboard.adminNav.collections, icon: AlertTriangle },
+    { href: "/admin/relatorios", label: dict.dashboard.adminNav.reports, icon: BarChart3 },
+  ];
+
   const nav = area === "cliente" ? clientNav : adminNav;
 
   return (
@@ -91,7 +97,7 @@ export function DashboardShell({
               <div>
                 <div className="text-[14px] font-bold tracking-[-0.04em]">KUKULA</div>
                 <div className="text-[10px] uppercase tracking-[0.1em] text-[#999]">
-                  {area === "cliente" ? "Área do cliente" : "Administração"}
+                  {area === "cliente" ? dict.dashboard.clientArea : dict.dashboard.adminArea}
                 </div>
               </div>
             </Link>
@@ -132,7 +138,7 @@ export function DashboardShell({
               className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] text-[#666] hover:bg-[#F4F4F4]"
             >
               <LogOut size={16} />
-              Sair
+              {dict.nav.signOut}
             </button>
           </div>
         </aside>
@@ -141,7 +147,7 @@ export function DashboardShell({
           <button
             className="fixed inset-0 z-30 bg-black/20 md:hidden"
             onClick={() => setOpen(false)}
-            aria-label="Fechar menu"
+            aria-label={dict.nav.closeMenu}
           />
         ) : null}
 
@@ -151,6 +157,7 @@ export function DashboardShell({
               <button
                 className="rounded-full border border-[#E5E5E5] p-2 md:hidden"
                 onClick={() => setOpen(true)}
+                aria-label={dict.nav.menu}
               >
                 <Menu size={18} />
               </button>
@@ -158,12 +165,11 @@ export function DashboardShell({
                 <h1 className="text-[18px] font-bold tracking-[-0.04em] text-[#0A0A0A]">
                   {title}
                 </h1>
-                {subtitle ? (
-                  <p className="text-[12px] text-[#999]">{subtitle}</p>
-                ) : null}
+                {subtitle ? <p className="text-[12px] text-[#999]">{subtitle}</p> : null}
               </div>
             </div>
             <div className="flex items-center gap-3">
+              <LanguageSwitcher />
               <div className="hidden items-center gap-2 rounded-full border border-[#E5E5E5] bg-[#FAFAFA] px-3 py-1.5 text-[12px] text-[#555] sm:flex">
                 <Landmark size={14} />
                 Kukula

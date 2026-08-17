@@ -29,10 +29,16 @@ export function mapProfile(row: Profile): Client {
     phone: row.phone ?? "",
     address: row.address ?? "",
     idDocument: row.id_document ?? "",
+    idDocumentType: row.id_document_type ?? "",
+    dateOfBirth: row.date_of_birth ?? "",
+    province: row.province ?? "",
+    district: row.district ?? "",
+    neighborhood: row.neighborhood ?? "",
     profession: row.profession ?? "",
     income: Number(row.income ?? 0),
     createdAt: row.created_at.slice(0, 10),
     status: row.status,
+    verificationStatus: row.verification_status ?? "nao_verificado",
   };
 }
 

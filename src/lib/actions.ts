@@ -4,8 +4,10 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { requireProfile } from "@/lib/queries";
-import { simulateLoan } from "@/lib/utils";
+import { simulateLoan, isProfileVerified } from "@/lib/utils";
 import type { Database } from "@/lib/database.types";
+import type { IdDocumentType } from "@/lib/types";
+import { ID_DOCUMENT_TYPES } from "@/lib/types";
 
 type ApplicationStatus = Database["public"]["Tables"]["loan_applications"]["Row"]["status"];
 type DocumentStatus = Database["public"]["Tables"]["documents"]["Row"]["status"];
@@ -95,6 +97,14 @@ export async function signOutAction() {
 
 export async function createLoanApplicationAction(formData: FormData) {
   const { supabase, profile } = await requireProfile();
+
+  if (!isProfileVerified(profile)) {
+    return {
+      error:
+        "O seu perfil ainda não está verificado. Complete a verificação de identidade antes de solicitar um empréstimo.",
+      code: "profile_not_verified" as const,
+    };
+  }
 
   const productId = String(formData.get("product_id") ?? "");
   const amount = Number(formData.get("amount"));
@@ -252,6 +262,43 @@ export async function updateDocumentStatusAction(formData: FormData) {
 
   if (error) return { error: error.message };
 
+  const isIdentityDoc =
+    data.doc_type === "Identificação" ||
+    ID_DOCUMENT_TYPES.some((t) => t.value === data.doc_type);
+
+  if (isIdentityDoc) {
+    if (status === "aprovado") {
+      await supabase
+        .from("profiles")
+        .update({
+          verification_status: "verificado",
+          status: "activo",
+        })
+        .eq("id", data.client_id);
+
+      await supabase.from("notifications").insert({
+        user_id: data.client_id,
+        type: "aprovacao",
+        title: "Perfil verificado",
+        message:
+          "A sua identidade foi aprovada. Já pode solicitar um empréstimo.",
+      });
+    } else if (status === "corrigir") {
+      await supabase
+        .from("profiles")
+        .update({ verification_status: "rejeitado" })
+        .eq("id", data.client_id);
+
+      await supabase.from("notifications").insert({
+        user_id: data.client_id,
+        type: "analise",
+        title: "Verificação incompleta",
+        message:
+          "O documento de identidade precisa de correção. Volte a enviar a verificação.",
+      });
+    }
+  }
+
   await writeAudit(
     `Documento ${status}`,
     data.name,
@@ -262,6 +309,145 @@ export async function updateDocumentStatusAction(formData: FormData) {
 
   revalidatePath("/admin/documentos");
   revalidatePath("/cliente/documentos");
+  revalidatePath("/cliente/perfil");
+  revalidatePath("/cliente/verificacao");
+  revalidatePath("/cliente");
+  return { success: true };
+}
+
+export async function submitVerificationAction(formData: FormData) {
+  const { supabase, profile } = await requireProfile();
+
+  if (profile.verification_status === "verificado") {
+    return { error: "O seu perfil já está verificado." };
+  }
+
+  if (profile.verification_status === "em_analise") {
+    return {
+      error: "A sua verificação já está em análise. Aguarde a decisão.",
+    };
+  }
+
+  const fullName = String(formData.get("full_name") ?? "").trim();
+  const phone = String(formData.get("phone") ?? "").trim();
+  const dateOfBirth = String(formData.get("date_of_birth") ?? "").trim();
+  const profession = String(formData.get("profession") ?? "").trim();
+  const income = Number(formData.get("income") ?? 0);
+  const province = String(formData.get("province") ?? "").trim();
+  const district = String(formData.get("district") ?? "").trim();
+  const neighborhood = String(formData.get("neighborhood") ?? "").trim();
+  const address = String(formData.get("address") ?? "").trim();
+  const idDocumentType = String(formData.get("id_document_type") ?? "").trim() as IdDocumentType;
+  const idDocument = String(formData.get("id_document") ?? "").trim();
+  const file = formData.get("identity_file");
+
+  const allowedTypes = ID_DOCUMENT_TYPES.map((t) => t.value);
+  if (!allowedTypes.includes(idDocumentType)) {
+    return { error: "Seleccione um tipo de documento válido." };
+  }
+
+  if (
+    !fullName ||
+    !phone ||
+    !dateOfBirth ||
+    !profession ||
+    !province ||
+    !district ||
+    !neighborhood ||
+    !address ||
+    !idDocument
+  ) {
+    return { error: "Preencha todos os campos obrigatórios." };
+  }
+
+  if (!(file instanceof File) || file.size === 0) {
+    return { error: "Envie uma cópia do documento de identidade." };
+  }
+
+  const maxBytes = 8 * 1024 * 1024;
+  if (file.size > maxBytes) {
+    return { error: "O ficheiro não pode exceder 8 MB." };
+  }
+
+  const ext = file.name.includes(".")
+    ? file.name.split(".").pop()?.toLowerCase()
+    : "bin";
+  const path = `${profile.id}/${Date.now()}-${idDocumentType}.${ext}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from("client-documents")
+    .upload(path, file, {
+      contentType: file.type || "application/octet-stream",
+      upsert: false,
+    });
+
+  if (uploadError) {
+    return {
+      error:
+        uploadError.message.includes("Bucket not found") ||
+        uploadError.message.includes("not found")
+          ? "Armazenamento de documentos não configurado. Execute a migration 002_profile_verification.sql no Supabase."
+          : uploadError.message,
+    };
+  }
+
+  const { error: profileError } = await supabase
+    .from("profiles")
+    .update({
+      full_name: fullName,
+      phone,
+      date_of_birth: dateOfBirth,
+      profession,
+      income: Number.isFinite(income) ? income : 0,
+      province,
+      district,
+      neighborhood,
+      address,
+      id_document_type: idDocumentType,
+      id_document: idDocument,
+      verification_status: "em_analise",
+    })
+    .eq("id", profile.id);
+
+  if (profileError) return { error: profileError.message };
+
+  const docLabel =
+    ID_DOCUMENT_TYPES.find((t) => t.value === idDocumentType)?.labelPt ??
+    idDocumentType;
+
+  const { error: docError } = await supabase.from("documents").insert({
+    client_id: profile.id,
+    name: `${docLabel} — ${idDocument}`,
+    doc_type: idDocumentType,
+    status: "em_analise",
+    file_url: path,
+  });
+
+  if (docError) return { error: docError.message };
+
+  await supabase.from("notifications").insert({
+    user_id: profile.id,
+    type: "analise",
+    title: "Verificação enviada",
+    message:
+      "Os seus dados e documento de identidade foram enviados para análise.",
+  });
+
+  await writeAudit(
+    "Pedido de verificação de perfil",
+    profile.email,
+    `${docLabel} ${idDocument}`,
+    profile.id,
+    fullName,
+  );
+
+  revalidatePath("/cliente");
+  revalidatePath("/cliente/perfil");
+  revalidatePath("/cliente/verificacao");
+  revalidatePath("/cliente/documentos");
+  revalidatePath("/admin/documentos");
+  revalidatePath("/admin/clientes");
+
   return { success: true };
 }
 

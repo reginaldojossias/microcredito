@@ -48,19 +48,19 @@ type SeedUser = {
 
 const users: SeedUser[] = [
   {
-    email: "admin@kukula.ao",
+    email: "admin@kukula.co.mz",
     password: "demo1234",
     full_name: "Carla Mendes",
     role: "admin",
-    phone: "+244 900 000 001",
+    phone: "+258 84 000 0001",
     status: "activo",
   },
   {
-    email: "analista@kukula.ao",
+    email: "analista@kukula.co.mz",
     password: "demo1234",
     full_name: "Rui Almeida",
     role: "analista",
-    phone: "+244 900 000 002",
+    phone: "+258 84 000 0002",
     status: "activo",
   },
   {
@@ -68,9 +68,9 @@ const users: SeedUser[] = [
     password: "demo1234",
     full_name: "Maria Fernandes",
     role: "cliente",
-    phone: "+244 923 000 111",
-    address: "Luanda, Ingombota",
-    id_document: "BI 00998877LA046",
+    phone: "+258 84 123 4567",
+    address: "Maputo, KaMpfumo",
+    id_document: "BI 010203040506M010",
     profession: "Comerciante",
     income: 450000,
     status: "activo",
@@ -80,9 +80,9 @@ const users: SeedUser[] = [
     password: "demo1234",
     full_name: "João Baptista",
     role: "cliente",
-    phone: "+244 912 222 333",
-    address: "Benguela, Centro",
-    id_document: "BI 00112233BE012",
+    phone: "+258 86 222 3333",
+    address: "Beira, Centro",
+    id_document: "BI 020304050607B012",
     profession: "Agricultor",
     income: 280000,
     status: "pendente",
@@ -92,9 +92,9 @@ const users: SeedUser[] = [
     password: "demo1234",
     full_name: "Ana Costa",
     role: "cliente",
-    phone: "+244 935 444 555",
-    address: "Huambo, Centro",
-    id_document: "BI 00445566HU089",
+    phone: "+258 85 444 5555",
+    address: "Nampula, Centro",
+    id_document: "BI 030405060708N089",
     profession: "Costureira",
     income: 210000,
     status: "activo",
@@ -104,9 +104,9 @@ const users: SeedUser[] = [
     password: "demo1234",
     full_name: "Pedro Silva",
     role: "cliente",
-    phone: "+244 944 666 777",
-    address: "Lobito, Compão",
-    id_document: "BI 00778899LB021",
+    phone: "+258 87 666 7777",
+    address: "Matola, Machava",
+    id_document: "BI 040506070809T021",
     profession: "Motorista",
     income: 320000,
     status: "activo",
@@ -129,6 +129,13 @@ async function ensureUser(user: SeedUser) {
         profession: user.profession ?? null,
         income: user.income ?? 0,
         status: user.status ?? "pendente",
+        verification_status:
+          user.role !== "cliente"
+            ? "verificado"
+            : user.status === "activo"
+              ? "verificado"
+              : "nao_verificado",
+        id_document_type: user.id_document ? "BI" : null,
       })
       .eq("id", existing.id);
     return existing.id;
@@ -151,6 +158,28 @@ async function ensureUser(user: SeedUser) {
   });
 
   if (error) throw error;
+
+  await supabase
+    .from("profiles")
+    .update({
+      role: user.role,
+      full_name: user.full_name,
+      phone: user.phone ?? null,
+      address: user.address ?? null,
+      id_document: user.id_document ?? null,
+      profession: user.profession ?? null,
+      income: user.income ?? 0,
+      status: user.status ?? "pendente",
+      verification_status:
+        user.role !== "cliente"
+          ? "verificado"
+          : user.status === "activo"
+            ? "verificado"
+            : "nao_verificado",
+      id_document_type: user.id_document ? "BI" : null,
+    })
+    .eq("id", data.user.id);
+
   return data.user.id;
 }
 
@@ -173,8 +202,8 @@ async function main() {
   const joao = ids["joao.baptista@email.com"];
   const ana = ids["ana.costa@email.com"];
   const pedro = ids["pedro.silva@email.com"];
-  const carla = ids["admin@kukula.ao"];
-  const rui = ids["analista@kukula.ao"];
+  const carla = ids["admin@kukula.co.mz"];
+  const rui = ids["analista@kukula.co.mz"];
 
   // Clean operational demo data for re-seed safety (keeps users/products)
   await supabase.from("payments").delete().neq("id", "00000000-0000-0000-0000-000000000000");
@@ -400,14 +429,14 @@ async function main() {
       user_id: maria,
       type: "lembrete",
       title: "Lembrete de prestação",
-      message: "A prestação de Kz 36.800 vence a 18/08/2026.",
+      message: "A prestação de 36.800 MT vence a 18/08/2026.",
       read: false,
     },
     {
       user_id: maria,
       type: "pagamento",
       title: "Pagamento confirmado",
-      message: "Recebemos o pagamento de Kz 36.800 referente ao empréstimo KUK-2026-0098.",
+      message: "Recebemos o pagamento de 36.800 MT referente ao empréstimo KUK-2026-0098.",
       read: true,
     },
     {
@@ -425,7 +454,7 @@ async function main() {
       actor_id: carla,
       actor_name: "Carla Mendes",
       target: "KUK-2026-0160",
-      detail: "Pedido aprovado no valor de Kz 450.000",
+      detail: "Pedido aprovado no valor de 450.000 MT",
     },
     {
       action: "Pedido de informação adicional",
@@ -445,8 +474,8 @@ async function main() {
 
   console.log("\nSeed concluído.");
   console.log("Contas demo:");
-  console.log("  admin@kukula.ao / demo1234");
-  console.log("  analista@kukula.ao / demo1234");
+  console.log("  admin@kukula.co.mz / demo1234");
+  console.log("  analista@kukula.co.mz / demo1234");
   console.log("  maria.fernandes@email.com / demo1234");
 }
 

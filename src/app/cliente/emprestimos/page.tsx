@@ -3,13 +3,14 @@ import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/layout/DashboardShell";
 import { Card } from "@/components/ui/Card";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { getServerI18n } from "@/lib/i18n/server";
 import { getLoans, getSessionProfile } from "@/lib/queries";
-import { formatCurrency, formatDate } from "@/lib/utils";
 
 export default async function EmprestimosPage() {
   const { user, profile } = await getSessionProfile();
   if (!user || !profile) redirect("/login");
 
+  const { formatCurrency, formatDate } = await getServerI18n();
   const list = await getLoans(profile.id);
 
   return (
@@ -29,13 +30,13 @@ export default async function EmprestimosPage() {
                     <h3 className="text-[16px] font-semibold">{loan.reference}</h3>
                     <StatusPill status={loan.status} />
                   </div>
-                  <p className="mt-2 text-[14px] text-[#666]">
+                  <p className="mt-2 text-[14px] text-ink-secondary">
                     Desembolsado em {formatDate(loan.disbursedAt)} · saldo{" "}
                     {formatCurrency(loan.balance)}
                   </p>
                 </div>
                 <div className="text-left lg:text-right">
-                  <div className="text-[11px] uppercase tracking-[0.08em] text-[#999]">
+                  <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
                     Próxima prestação
                   </div>
                   <div className="mt-1 text-[18px] font-semibold">
@@ -48,7 +49,7 @@ export default async function EmprestimosPage() {
         ))}
         {!list.length ? (
           <Card>
-            <p className="text-[14px] text-[#666]">Ainda não tem empréstimos activos.</p>
+            <p className="text-[14px] text-ink-secondary">Ainda não tem empréstimos activos.</p>
           </Card>
         ) : null}
       </div>

@@ -7,12 +7,13 @@ import {
   getAuditLogs,
   getSessionProfile,
 } from "@/lib/queries";
-import { formatCurrency, formatDateTime } from "@/lib/utils";
+import { getServerI18n } from "@/lib/i18n/server";
 
 export default async function AdminRelatoriosPage() {
   const { user, profile } = await getSessionProfile();
   if (!user || !profile) redirect("/login");
 
+  const { formatCurrency, formatDateTime } = await getServerI18n();
   const [stats, auditLog] = await Promise.all([getAdminStats(), getAuditLogs()]);
 
   return (
@@ -43,7 +44,7 @@ export default async function AdminRelatoriosPage() {
               ["Clientes activos", String(stats.clientesActivos)],
             ].map(([label, value]) => (
               <div key={label} className="flex items-center justify-between text-[14px]">
-                <span className="text-[#666]">{label}</span>
+                <span className="text-ink-secondary">{label}</span>
                 <span className="font-semibold">{value}</span>
               </div>
             ))}
@@ -54,12 +55,12 @@ export default async function AdminRelatoriosPage() {
           <h3 className="text-[18px] font-bold tracking-[-0.03em]">Histórico de auditoria</h3>
           <div className="mt-5 space-y-4">
             {auditLog.map((entry) => (
-              <div key={entry.id} className="border-b border-[#F5F5F5] pb-3 last:border-0">
+              <div key={entry.id} className="border-b border-line pb-3 last:border-0">
                 <div className="font-medium">{entry.action}</div>
-                <div className="mt-1 text-[13px] text-[#666]">
+                <div className="mt-1 text-[13px] text-ink-secondary">
                   {entry.actor} · {entry.target}
                 </div>
-                <div className="mt-1 text-[12px] text-[#999]">
+                <div className="mt-1 text-[12px] text-ink-tertiary">
                   {formatDateTime(entry.createdAt)}
                 </div>
               </div>

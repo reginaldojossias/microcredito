@@ -2,9 +2,11 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowRight, Bell, FileText, Wallet } from "lucide-react";
 import { DashboardShell } from "@/components/layout/DashboardShell";
+import { RequestLoanGate } from "@/components/RequestLoanGate";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { getServerI18n } from "@/lib/i18n/server";
 import {
   getApplications,
   getDocuments,
@@ -14,12 +16,12 @@ import {
   getSessionProfile,
 } from "@/lib/queries";
 import { mapProfile } from "@/lib/mappers";
-import { formatCurrency, formatDate } from "@/lib/utils";
 
 export default async function ClienteDashboardPage() {
   const { user, profile } = await getSessionProfile();
   if (!user || !profile) redirect("/login");
 
+  const { dict, formatCurrency, formatDate } = await getServerI18n();
   const client = mapProfile(profile);
   const [applications, documents, loans, notifications] = await Promise.all([
     getApplications(profile.id),
@@ -44,23 +46,23 @@ export default async function ClienteDashboardPage() {
   return (
     <DashboardShell
       area="cliente"
-      title={`Olá, ${client.name.split(" ")[0]}`}
-      subtitle="Acompanhe pedidos, documentos e a sua situação financeira."
+      title={`${dict.client.greeting}, ${client.name.split(" ")[0]}`}
+      subtitle={dict.client.dashboardSubtitle}
       userName={client.name}
     >
       <div className="grid gap-4 xl:grid-cols-3">
         <Card className="xl:col-span-2">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <div className="text-[11px] uppercase tracking-[0.08em] text-[#999]">
-                Empréstimo activo
+              <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
+                {dict.client.activeLoan}
               </div>
               <h2 className="mt-2 text-[28px] font-bold tracking-[-0.04em]">
-                {activeLoan ? activeLoan.reference : "Sem empréstimo activo"}
+                {activeLoan ? activeLoan.reference : dict.client.noActiveLoan}
               </h2>
               {activeLoan ? (
-                <p className="mt-2 text-[14px] text-[#666]">
-                  Próxima prestação {formatCurrency(activeLoan.nextInstallment)} ·{" "}
+                <p className="mt-2 text-[14px] text-ink-secondary">
+                  {dict.client.nextInstallment} {formatCurrency(activeLoan.nextInstallment)} ·{" "}
                   {formatDate(activeLoan.nextDueDate)}
                 </p>
               ) : null}
@@ -71,16 +73,16 @@ export default async function ClienteDashboardPage() {
           {activeLoan ? (
             <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {[
-                ["Valor recebido", formatCurrency(activeLoan.principal)],
-                ["Total a pagar", formatCurrency(activeLoan.totalPayable)],
-                ["Já pago", formatCurrency(activeLoan.paidAmount)],
-                ["Saldo em aberto", formatCurrency(activeLoan.balance)],
+                [dict.client.amountReceived, formatCurrency(activeLoan.principal)],
+                [dict.client.totalPayable, formatCurrency(activeLoan.totalPayable)],
+                [dict.client.alreadyPaid, formatCurrency(activeLoan.paidAmount)],
+                [dict.client.outstandingBalance, formatCurrency(activeLoan.balance)],
               ].map(([label, value]) => (
                 <div
                   key={label}
-                  className="rounded-2xl border border-[#F0F0F0] bg-[#FAFAFA] p-4"
+                  className="k-metric-tile"
                 >
-                  <div className="text-[11px] uppercase tracking-[0.08em] text-[#999]">
+                  <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
                     {label}
                   </div>
                   <div className="mt-2 text-[18px] font-semibold tracking-[-0.03em]">
@@ -91,12 +93,12 @@ export default async function ClienteDashboardPage() {
             </div>
           ) : (
             <div className="mt-8">
-              <Link href="/cliente/pedidos/novo">
+              <RequestLoanGate verificationStatus={client.verificationStatus}>
                 <Button>
-                  Solicitar crédito
+                  {dict.client.requestCredit}
                   <ArrowRight size={16} />
                 </Button>
-              </Link>
+              </RequestLoanGate>
             </div>
           )}
         </Card>
@@ -104,33 +106,36 @@ export default async function ClienteDashboardPage() {
         <div className="grid gap-4">
           <Card>
             <div className="flex items-center gap-3">
-              <div className="flex h-[42px] w-[42px] items-center justify-center rounded-[10px] border border-[#E5E5E5] bg-[#F3F3F3]">
+              <div className="k-icon-well">
                 <FileText size={18} />
               </div>
               <div>
-                <div className="text-[13px] font-semibold">Documentos</div>
-                <div className="text-[12px] text-[#999]">{docsPending} por tratar</div>
+                <div className="text-[13px] font-semibold">{dict.dashboard.clientNav.documents}</div>
+                <div className="text-[12px] text-ink-tertiary">
+                  {docsPending} {dict.client.documentsToReview}
+                </div>
               </div>
             </div>
-            <Link href="/cliente/documentos" className="mt-4 inline-block text-[13px] font-medium">
-              Ver documentos →
+            <Link href="/cliente/documentos" className="k-link mt-4 inline-block">
+              {dict.client.viewDocuments} →
             </Link>
           </Card>
           <Card>
             <div className="flex items-center gap-3">
-              <div className="flex h-[42px] w-[42px] items-center justify-center rounded-[10px] border border-[#E5E5E5] bg-[#F3F3F3]">
+              <div className="k-icon-well">
                 <Bell size={18} />
               </div>
               <div>
-                <div className="text-[13px] font-semibold">Notificações</div>
-                <div className="text-[12px] text-[#999]">{unread} por ler</div>
+                <div className="text-[13px] font-semibold">
+                  {dict.dashboard.clientNav.notifications}
+                </div>
+                <div className="text-[12px] text-ink-tertiary">
+                  {unread} {dict.client.unreadCount}
+                </div>
               </div>
             </div>
-            <Link
-              href="/cliente/notificacoes"
-              className="mt-4 inline-block text-[13px] font-medium"
-            >
-              Abrir caixa →
+            <Link href="/cliente/notificacoes" className="k-link mt-4 inline-block">
+              {dict.client.openInbox} →
             </Link>
           </Card>
         </div>
@@ -139,53 +144,57 @@ export default async function ClienteDashboardPage() {
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         <Card>
           <div className="mb-5 flex items-center justify-between">
-            <h3 className="text-[18px] font-bold tracking-[-0.03em]">Pedido em curso</h3>
+            <h3 className="text-[18px] font-bold tracking-[-0.03em]">
+              {dict.client.applicationInProgress}
+            </h3>
             <Link href="/cliente/pedidos">
               <Button variant="secondary" size="sm">
-                Ver todos
+                {dict.client.viewAll}
               </Button>
             </Link>
           </div>
           {openApp ? (
-            <div className="rounded-2xl border border-[#E5E5E5] p-5">
+            <div className="rounded-2xl border border-line p-5">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <div className="text-[15px] font-semibold">{openApp.reference}</div>
-                  <div className="text-[13px] text-[#666]">
+                  <div className="text-[13px] text-ink-secondary">
                     {openApp.productName} · {formatCurrency(openApp.amount)}
                   </div>
                 </div>
                 <StatusPill status={openApp.status} />
               </div>
-              <p className="mt-4 text-[13px] text-[#666]">
-                Actualizado em {formatDate(openApp.updatedAt)}.
+              <p className="mt-4 text-[13px] text-ink-secondary">
+                {dict.client.updatedAt} {formatDate(openApp.updatedAt)}.
               </p>
             </div>
           ) : (
-            <p className="text-[14px] text-[#666]">Não existe pedido em análise.</p>
+            <p className="text-[14px] text-ink-secondary">{dict.client.noApplicationInReview}</p>
           )}
         </Card>
 
         <Card>
           <div className="mb-5 flex items-center justify-between">
-            <h3 className="text-[18px] font-bold tracking-[-0.03em]">Próxima prestação</h3>
-            <Wallet size={18} className="text-[#999]" />
+            <h3 className="text-[18px] font-bold tracking-[-0.03em]">
+              {dict.client.nextInstallmentTitle}
+            </h3>
+            <Wallet size={18} className="text-gold" />
           </div>
           {nextInstallment ? (
             <div>
               <div className="text-[32px] font-bold tracking-[-0.04em]">
                 {formatCurrency(nextInstallment.amount)}
               </div>
-              <p className="mt-2 text-[14px] text-[#666]">
-                Prestação #{nextInstallment.number} · vencimento{" "}
+              <p className="mt-2 text-[14px] text-ink-secondary">
+                {dict.client.installmentNumber} #{nextInstallment.number} · {dict.client.dueDate}{" "}
                 {formatDate(nextInstallment.dueDate)}
               </p>
               <Link href="/cliente/pagamentos" className="mt-5 inline-block">
-                <Button size="sm">Registar pagamento</Button>
+                <Button size="sm">{dict.client.registerPayment}</Button>
               </Link>
             </div>
           ) : (
-            <p className="text-[14px] text-[#666]">Sem prestações pendentes.</p>
+            <p className="text-[14px] text-ink-secondary">{dict.client.noPendingInstallments}</p>
           )}
         </Card>
       </div>

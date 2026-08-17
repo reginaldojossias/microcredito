@@ -3,13 +3,14 @@ import { DashboardShell } from "@/components/layout/DashboardShell";
 import { CreateDocumentForm } from "@/components/forms/CreateDocumentForm";
 import { Card } from "@/components/ui/Card";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { getServerI18n } from "@/lib/i18n/server";
 import { getDocuments, getSessionProfile } from "@/lib/queries";
-import { formatDate } from "@/lib/utils";
 
 export default async function DocumentosPage() {
   const { user, profile } = await getSessionProfile();
   if (!user || !profile) redirect("/login");
 
+  const { formatDate } = await getServerI18n();
   const docs = await getDocuments(profile.id);
 
   return (
@@ -31,11 +32,11 @@ export default async function DocumentosPage() {
           >
             <div>
               <div className="text-[15px] font-semibold">{doc.name}</div>
-              <div className="mt-1 text-[13px] text-[#666]">
+              <div className="mt-1 text-[13px] text-ink-secondary">
                 {doc.type} · enviado em {formatDate(doc.uploadedAt)}
               </div>
               {doc.notes ? (
-                <p className="mt-2 text-[13px] text-[#777]">{doc.notes}</p>
+                <p className="mt-2 text-[13px] text-ink-tertiary">{doc.notes}</p>
               ) : null}
             </div>
             <StatusPill status={doc.status} />
@@ -43,7 +44,7 @@ export default async function DocumentosPage() {
         ))}
         {!docs.length ? (
           <Card>
-            <p className="text-[14px] text-[#666]">Ainda não enviou documentos.</p>
+            <p className="text-[14px] text-ink-secondary">Ainda não enviou documentos.</p>
           </Card>
         ) : null}
       </div>

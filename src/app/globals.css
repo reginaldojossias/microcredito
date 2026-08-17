@@ -1,23 +1,124 @@
 @import "tailwindcss";
 
+/* -------------------------------------------------------------------------- */
+/* KUKULA Design Tokens — Admin + Cliente partilham a mesma identidade        */
+/* Proporção alvo: ~70% off-white · ~20% carvão · ~10% dourado/estados        */
+/* -------------------------------------------------------------------------- */
+
 :root {
-  --primary: #000000;
-  --secondary: #111111;
-  --background: #ffffff;
-  --background-soft: #fafafa;
-  --surface: #ffffff;
-  --text-primary: #0a0a0a;
-  --text-secondary: #666666;
-  --text-muted: #999999;
-  --border: #e7e7e7;
-  --border-soft: #f0f0f0;
-  --dark-section: #090909;
+  /* Surfaces */
+  --k-canvas: #fafaf8;
+  --k-canvas-soft: #f5f4f0;
+  --k-surface: #ffffff;
+
+  /* Charcoal */
+  --k-charcoal: #111312;
+  --k-charcoal-2: #1a1c1a;
+  --k-charcoal-hover: #242724;
+
+  /* Gold (destaque — usar com moderação) */
+  --k-gold: #c9962c;
+  --k-gold-2: #b8861f;
+  --k-gold-light: #e2c16b;
+  --k-gold-soft: #f7eedb;
+
+  /* Text */
+  --k-ink: #171918;
+  --k-ink-secondary: #6b6d69;
+  --k-ink-tertiary: #8c8e89;
+  --k-ink-placeholder: #969792;
+  --k-ink-on-dark: #ffffff;
+  --k-ink-on-gold: #171918;
+
+  /* Lines */
+  --k-line: #e8e7e2;
+  --k-line-strong: #dad9d3;
+  --k-line-muted: #e6e5e0;
+
+  /* Sidebar (Admin) */
+  --k-sidebar: #111312;
+  --k-sidebar-text: #d8d8d3;
+  --k-sidebar-icon: #c8c9c5;
+  --k-sidebar-active: #242622;
+  --k-sidebar-border: #1f211f;
+
+  /* Semantic */
+  --k-success: #2f7d4a;
+  --k-success-soft: #eaf5ed;
+  --k-warning: #b7791f;
+  --k-warning-soft: #fff5dd;
+  --k-warning-ink: #9a6818;
+  --k-danger: #b84032;
+  --k-danger-soft: #fcedea;
+  --k-info: #3d6685;
+  --k-info-soft: #edf4f8;
+  --k-review: #8b681f;
+  --k-review-soft: #f3ebdd;
+
+  /* Tables */
+  --k-table-head: #f5f4f0;
+  --k-table-hover: #faf6ea;
+
+  /* Shadows — discretas */
+  --k-shadow: 0 1px 2px rgba(17, 19, 18, 0.04), 0 4px 16px rgba(17, 19, 18, 0.03);
+  --k-radius: 16px;
+  --k-radius-sm: 12px;
+
+  /* Compatibilidade com tokens antigos */
+  --primary: var(--k-charcoal);
+  --secondary: var(--k-charcoal-2);
+  --background: var(--k-canvas);
+  --background-soft: var(--k-canvas-soft);
+  --surface: var(--k-surface);
+  --text-primary: var(--k-ink);
+  --text-secondary: var(--k-ink-secondary);
+  --text-muted: var(--k-ink-tertiary);
+  --border: var(--k-line);
+  --border-soft: var(--k-line-muted);
+  --dark-section: var(--k-charcoal);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--text-primary);
-  --font-sans: "Inter", system-ui, sans-serif;
+  --color-canvas: var(--k-canvas);
+  --color-canvas-soft: var(--k-canvas-soft);
+  --color-surface: var(--k-surface);
+  --color-charcoal: var(--k-charcoal);
+  --color-charcoal-2: var(--k-charcoal-2);
+  --color-charcoal-hover: var(--k-charcoal-hover);
+  --color-gold: var(--k-gold);
+  --color-gold-2: var(--k-gold-2);
+  --color-gold-light: var(--k-gold-light);
+  --color-gold-soft: var(--k-gold-soft);
+  --color-ink: var(--k-ink);
+  --color-ink-secondary: var(--k-ink-secondary);
+  --color-ink-tertiary: var(--k-ink-tertiary);
+  --color-ink-placeholder: var(--k-ink-placeholder);
+  --color-line: var(--k-line);
+  --color-line-strong: var(--k-line-strong);
+  --color-line-muted: var(--k-line-muted);
+  --color-sidebar: var(--k-sidebar);
+  --color-sidebar-text: var(--k-sidebar-text);
+  --color-sidebar-icon: var(--k-sidebar-icon);
+  --color-sidebar-active: var(--k-sidebar-active);
+  --color-sidebar-border: var(--k-sidebar-border);
+  --color-success: var(--k-success);
+  --color-success-soft: var(--k-success-soft);
+  --color-warning: var(--k-warning);
+  --color-warning-soft: var(--k-warning-soft);
+  --color-warning-ink: var(--k-warning-ink);
+  --color-danger: var(--k-danger);
+  --color-danger-soft: var(--k-danger-soft);
+  --color-info: var(--k-info);
+  --color-info-soft: var(--k-info-soft);
+  --color-review: var(--k-review);
+  --color-review-soft: var(--k-review-soft);
+  --color-table-head: var(--k-table-head);
+  --color-table-hover: var(--k-table-hover);
+  --color-background: var(--k-canvas);
+  --color-foreground: var(--k-ink);
+  --font-sans: "DM Sans", system-ui, sans-serif;
+  --shadow-k: var(--k-shadow);
+  --radius-k: var(--k-radius);
 }
 
 * {
@@ -29,15 +130,153 @@ html {
 }
 
 body {
-  background: var(--background);
-  color: var(--text-primary);
-  font-family: "Inter", system-ui, sans-serif;
+  background: var(--k-canvas);
+  color: var(--k-ink);
+  font-family: "DM Sans", system-ui, sans-serif;
   line-height: 1.6;
 }
 
 ::selection {
-  background: #111111;
-  color: #ffffff;
+  background: var(--k-gold-soft);
+  color: var(--k-ink);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Component primitives (partilhados Admin + Cliente)                         */
+/* -------------------------------------------------------------------------- */
+
+.k-input {
+  width: 100%;
+  border-radius: var(--k-radius-sm);
+  border: 1px solid var(--k-line-strong);
+  background: var(--k-surface);
+  padding: 0.75rem 1rem;
+  font-size: 14px;
+  color: var(--k-ink);
+  outline: none;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.k-input::placeholder {
+  color: var(--k-ink-placeholder);
+}
+
+.k-input:focus {
+  border-color: var(--k-gold);
+  box-shadow: 0 0 0 3px rgba(201, 150, 44, 0.14);
+}
+
+.k-label {
+  margin-bottom: 0.375rem;
+  display: block;
+  font-size: 12px;
+  color: var(--k-ink-secondary);
+}
+
+.k-link {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--k-gold-2);
+  transition: color 150ms ease;
+}
+
+.k-link:hover {
+  color: var(--k-gold);
+}
+
+.k-icon-well {
+  display: flex;
+  height: 42px;
+  width: 42px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 1px solid var(--k-line-muted);
+  background: var(--k-gold-soft);
+  color: var(--k-gold-2);
+}
+
+.k-metric-tile {
+  border-radius: 14px;
+  border: 1px solid var(--k-line);
+  background: var(--k-canvas-soft);
+  padding: 1rem;
+}
+
+.k-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--k-radius);
+  border: 1px solid var(--k-line);
+  background: var(--k-surface);
+}
+
+.k-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  color: var(--k-ink);
+}
+
+.k-table thead {
+  background: var(--k-table-head);
+}
+
+.k-table th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--k-ink-secondary);
+  border-bottom: 1px solid var(--k-line);
+}
+
+.k-table td {
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid var(--k-line);
+  background: var(--k-surface);
+}
+
+.k-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.k-table tbody tr:hover td {
+  background: var(--k-table-hover);
+}
+
+.k-alert {
+  border-radius: 14px;
+  border: 1px solid transparent;
+  padding: 0.875rem 1rem;
+  font-size: 14px;
+}
+
+.k-alert-danger {
+  border-color: color-mix(in srgb, var(--k-danger) 25%, white);
+  background: var(--k-danger-soft);
+  color: var(--k-danger);
+}
+
+.k-alert-warning {
+  border-color: color-mix(in srgb, var(--k-warning) 25%, white);
+  background: var(--k-warning-soft);
+  color: var(--k-warning-ink);
+}
+
+.k-alert-success {
+  border-color: color-mix(in srgb, var(--k-success) 25%, white);
+  background: var(--k-success-soft);
+  color: var(--k-success);
+}
+
+.k-alert-info {
+  border-color: color-mix(in srgb, var(--k-info) 25%, white);
+  background: var(--k-info-soft);
+  color: var(--k-info);
 }
 
 @keyframes fade-up {
@@ -69,19 +308,20 @@ body {
 }
 
 .geo-bg {
+  background-color: var(--k-canvas);
   background-image:
-    radial-gradient(circle at 20% 20%, rgba(0, 0, 0, 0.035), transparent 28%),
-    radial-gradient(circle at 80% 10%, rgba(0, 0, 0, 0.025), transparent 24%),
-    linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
-  background-size: auto, auto, 40px 40px, 40px 40px;
+    radial-gradient(circle at 18% 12%, rgba(201, 150, 44, 0.06), transparent 32%),
+    radial-gradient(circle at 85% 8%, rgba(17, 19, 18, 0.03), transparent 26%),
+    linear-gradient(rgba(17, 19, 18, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(17, 19, 18, 0.018) 1px, transparent 1px);
+  background-size: auto, auto, 44px 44px, 44px 44px;
 }
 
 .dark-geo {
-  background-color: #090909;
+  background-color: var(--k-charcoal);
   background-image:
-    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.08), transparent 28%),
-    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-  background-size: auto, 40px 40px, 40px 40px;
+    radial-gradient(circle at 28% 18%, rgba(201, 150, 44, 0.1), transparent 30%),
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: auto, 44px 44px, 44px 44px;
 }

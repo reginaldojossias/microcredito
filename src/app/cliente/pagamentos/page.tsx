@@ -3,13 +3,14 @@ import { DashboardShell } from "@/components/layout/DashboardShell";
 import { RegisterPaymentForm } from "@/components/forms/RegisterPaymentForm";
 import { Card } from "@/components/ui/Card";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { getServerI18n } from "@/lib/i18n/server";
 import { getLoans, getPayments, getSessionProfile } from "@/lib/queries";
-import { formatCurrency, formatDate } from "@/lib/utils";
 
 export default async function PagamentosClientePage() {
   const { user, profile } = await getSessionProfile();
   if (!user || !profile) redirect("/login");
 
+  const { formatCurrency, formatDate } = await getServerI18n();
   const [list, loans] = await Promise.all([
     getPayments(profile.id),
     getLoans(profile.id),
@@ -26,7 +27,7 @@ export default async function PagamentosClientePage() {
     >
       <Card className="mb-4">
         <h3 className="text-[18px] font-bold tracking-[-0.03em]">Registar pagamento</h3>
-        <p className="mt-2 text-[14px] text-[#666]">
+        <p className="mt-2 text-[14px] text-ink-secondary">
           O pagamento é gravado no Supabase e actualiza saldo e prestações.
         </p>
         <div className="mt-5">
@@ -42,7 +43,7 @@ export default async function PagamentosClientePage() {
           >
             <div>
               <div className="text-[15px] font-semibold">{payment.loanReference}</div>
-              <div className="mt-1 text-[13px] text-[#666]">
+              <div className="mt-1 text-[13px] text-ink-secondary">
                 {payment.method} · {formatDate(payment.paidAt)}
               </div>
             </div>
@@ -56,7 +57,7 @@ export default async function PagamentosClientePage() {
         ))}
         {!list.length ? (
           <Card>
-            <p className="text-[14px] text-[#666]">Sem pagamentos registados.</p>
+            <p className="text-[14px] text-ink-secondary">Sem pagamentos registados.</p>
           </Card>
         ) : null}
       </div>

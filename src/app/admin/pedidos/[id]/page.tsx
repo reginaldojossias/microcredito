@@ -8,7 +8,7 @@ import {
   getDocuments,
   getSessionProfile,
 } from "@/lib/queries";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { getServerI18n } from "@/lib/i18n/server";
 
 export default async function AdminPedidoDetalhePage({
   params,
@@ -19,6 +19,7 @@ export default async function AdminPedidoDetalhePage({
   const { user, profile } = await getSessionProfile();
   if (!user || !profile) redirect("/login");
 
+  const { formatCurrency, formatDate } = await getServerI18n();
   const app = await getApplicationById(id);
   if (!app) notFound();
 
@@ -36,7 +37,7 @@ export default async function AdminPedidoDetalhePage({
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <h2 className="text-[24px] font-bold tracking-[-0.04em]">{app.clientName}</h2>
-              <p className="mt-2 text-[14px] text-[#666]">
+              <p className="mt-2 text-[14px] text-ink-secondary">
                 {app.productName} · finalidade: {app.purpose}
               </p>
             </div>
@@ -51,9 +52,9 @@ export default async function AdminPedidoDetalhePage({
             ].map(([label, value]) => (
               <div
                 key={label}
-                className="rounded-2xl border border-[#F0F0F0] bg-[#FAFAFA] p-4"
+                className="rounded-2xl border border-line bg-canvas p-4"
               >
-                <div className="text-[11px] uppercase tracking-[0.08em] text-[#999]">
+                <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
                   {label}
                 </div>
                 <div className="mt-2 text-[18px] font-semibold">{value}</div>
@@ -67,11 +68,11 @@ export default async function AdminPedidoDetalhePage({
               {clientDocs.map((doc) => (
                 <div
                   key={doc.id}
-                  className="flex items-center justify-between rounded-xl border border-[#E5E5E5] px-4 py-3"
+                  className="flex items-center justify-between rounded-xl border border-line px-4 py-3"
                 >
                   <div>
                     <div className="text-[14px] font-medium">{doc.name}</div>
-                    <div className="text-[12px] text-[#999]">
+                    <div className="text-[12px] text-ink-tertiary">
                       {formatDate(doc.uploadedAt)}
                     </div>
                   </div>
@@ -79,7 +80,7 @@ export default async function AdminPedidoDetalhePage({
                 </div>
               ))}
               {!clientDocs.length ? (
-                <p className="text-[13px] text-[#666]">Sem documentos.</p>
+                <p className="text-[13px] text-ink-secondary">Sem documentos.</p>
               ) : null}
             </div>
           </div>

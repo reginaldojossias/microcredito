@@ -2,13 +2,14 @@ import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/layout/DashboardShell";
 import { Card } from "@/components/ui/Card";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { getServerI18n } from "@/lib/i18n/server";
 import { getPayments, getSessionProfile } from "@/lib/queries";
-import { formatCurrency, formatDate } from "@/lib/utils";
 
 export default async function AdminPagamentosPage() {
   const { user, profile } = await getSessionProfile();
   if (!user || !profile) redirect("/login");
 
+  const { formatCurrency, formatDate } = await getServerI18n();
   const payments = await getPayments();
 
   return (
@@ -28,7 +29,7 @@ export default async function AdminPagamentosPage() {
               <div className="text-[15px] font-semibold">
                 {payment.loanReference} · {payment.clientName}
               </div>
-              <div className="mt-1 text-[13px] text-[#666]">
+              <div className="mt-1 text-[13px] text-ink-secondary">
                 {payment.method} · {formatDate(payment.paidAt)}
               </div>
             </div>

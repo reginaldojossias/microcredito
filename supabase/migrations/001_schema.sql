@@ -15,6 +15,15 @@ do $$ begin
 exception when duplicate_object then null; end $$;
 
 do $$ begin
+  create type verification_status as enum (
+    'nao_verificado',
+    'em_analise',
+    'verificado',
+    'rejeitado'
+  );
+exception when duplicate_object then null; end $$;
+
+do $$ begin
   create type document_status as enum ('pendente', 'em_analise', 'aprovado', 'rejeitado', 'corrigir');
 exception when duplicate_object then null; end $$;
 
@@ -59,15 +68,22 @@ create table if not exists public.profiles (
   phone text,
   address text,
   id_document text,
+  id_document_type text,
+  date_of_birth date,
+  province text,
+  district text,
+  neighborhood text,
   profession text,
   income numeric(14,2) default 0,
   status profile_status not null default 'pendente',
+  verification_status verification_status not null default 'nao_verificado',
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
 
 create index if not exists profiles_role_idx on public.profiles (role);
 create index if not exists profiles_status_idx on public.profiles (status);
+create index if not exists profiles_verification_idx on public.profiles (verification_status);
 
 -- ---------------------------------------------------------------------------
 -- Credit products

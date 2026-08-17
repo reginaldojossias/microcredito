@@ -42,7 +42,7 @@ export default async function AdminDesembolsosPage() {
                       }
                     />
                   </div>
-                  <p className="mt-2 text-[14px] text-[#666]">
+                  <p className="mt-2 text-[14px] text-ink-secondary">
                     {app?.client?.full_name ?? "Cliente"} ·{" "}
                     {formatCurrency(Number(item.amount))} · método: {item.method}
                   </p>
@@ -50,7 +50,7 @@ export default async function AdminDesembolsosPage() {
                 {item.status !== "confirmado" ? (
                   <ConfirmDisbursementButton id={item.id} />
                 ) : (
-                  <div className="text-[13px] text-[#666]">
+                  <div className="text-[13px] text-ink-secondary">
                     Empréstimo activo · plano de pagamentos gerado
                   </div>
                 )}
@@ -60,7 +60,7 @@ export default async function AdminDesembolsosPage() {
         })}
         {!items.length ? (
           <Card>
-            <p className="text-[14px] text-[#666]">Sem desembolsos pendentes.</p>
+            <p className="text-[14px] text-ink-secondary">Sem desembolsos pendentes.</p>
           </Card>
         ) : null}
       </div>

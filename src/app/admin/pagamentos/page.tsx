@@ -29,7 +29,7 @@ export default async function AdminPagamentosPage() {
               <div className="text-[15px] font-semibold">
                 {payment.loanReference} · {payment.clientName}
               </div>
-              <div className="mt-1 text-[13px] text-[#666]">
+              <div className="mt-1 text-[13px] text-ink-secondary">
                 {payment.method} · {formatDate(payment.paidAt)}
               </div>
             </div>

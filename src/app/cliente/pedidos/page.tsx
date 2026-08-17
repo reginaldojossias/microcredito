@@ -44,16 +44,16 @@ export default async function PedidosPage() {
                   <h3 className="text-[16px] font-semibold">{app.reference}</h3>
                   <StatusPill status={app.status} />
                 </div>
-                <p className="mt-2 text-[14px] text-[#666]">
+                <p className="mt-2 text-[14px] text-ink-secondary">
                   {app.productName} · {formatCurrency(app.amount)} · {app.term} meses
                 </p>
-                <p className="mt-1 text-[12px] text-[#999]">
+                <p className="mt-1 text-[12px] text-ink-tertiary">
                   Criado em {formatDate(app.createdAt)} · actualizado em{" "}
                   {formatDate(app.updatedAt)}
                 </p>
               </div>
               <div className="text-left lg:text-right">
-                <div className="text-[11px] uppercase tracking-[0.08em] text-[#999]">
+                <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
                   Prestação estimada
                 </div>
                 <div className="mt-1 text-[18px] font-semibold">
@@ -65,7 +65,7 @@ export default async function PedidosPage() {
         ))}
         {!list.length ? (
           <Card>
-            <p className="text-[14px] text-[#666]">Ainda não tem pedidos.</p>
+            <p className="text-[14px] text-ink-secondary">Ainda não tem pedidos.</p>
           </Card>
         ) : null}
       </div>

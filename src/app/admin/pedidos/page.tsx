@@ -30,16 +30,16 @@ export default async function AdminPedidosPage() {
                     <h3 className="text-[16px] font-semibold">{app.reference}</h3>
                     <StatusPill status={app.status} />
                   </div>
-                  <p className="mt-2 text-[14px] text-[#666]">
+                  <p className="mt-2 text-[14px] text-ink-secondary">
                     {app.clientName} · {app.productName} · {formatCurrency(app.amount)} ·{" "}
                     {app.term} meses
                   </p>
-                  <p className="mt-1 text-[12px] text-[#999]">
+                  <p className="mt-1 text-[12px] text-ink-tertiary">
                     Actualizado em {formatDate(app.updatedAt)}
                     {app.analyst ? ` · Analista: ${app.analyst}` : ""}
                   </p>
                 </div>
-                <div className="text-[13px] font-medium text-[#111]">Analisar →</div>
+                <div className="k-link">Analisar →</div>
               </div>
             </Card>
           </Link>

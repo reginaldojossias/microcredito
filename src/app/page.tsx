@@ -32,13 +32,13 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="bg-white">
+    <div className="bg-canvas">
       <Navbar />
 
       <main>
         <section className="geo-bg relative overflow-hidden">
           <div className="mx-auto flex max-w-[1200px] flex-col items-center px-5 pb-24 pt-16 text-center md:pb-32 md:pt-24">
-            <span className="animate-fade-up mb-6 inline-flex items-center rounded-full border border-[#E5E5E5] bg-[#FAFAFA] px-3 py-1 text-[11px] text-[#555]">
+            <span className="animate-fade-up mb-6 inline-flex items-center rounded-full border border-line bg-gold-soft px-3 py-1 text-[11px] text-gold-2">
               {dict.home.badge}
             </span>
 
@@ -53,10 +53,10 @@ export default async function HomePage() {
               />
             </div>
 
-            <h1 className="animate-fade-up max-w-[700px] text-[40px] font-bold leading-[0.98] tracking-[-0.04em] text-[#0A0A0A] md:text-[64px]">
+            <h1 className="animate-fade-up max-w-[700px] text-[40px] font-bold leading-[0.98] tracking-[-0.04em] text-ink md:text-[64px]">
               {dict.home.heroTitle}
             </h1>
-            <p className="animate-fade-up mt-6 max-w-[600px] text-[16px] leading-[1.6] text-[#666]">
+            <p className="animate-fade-up mt-6 max-w-[600px] text-[16px] leading-[1.6] text-ink-secondary">
               {dict.home.heroDescription}
             </p>
 
@@ -76,7 +76,7 @@ export default async function HomePage() {
           </div>
         </section>
 
-        <section className="border-y border-[#F0F0F0] bg-[#FAFAFA] py-14">
+        <section className="border-y border-line bg-canvas py-14">
           <div className="mx-auto grid max-w-[1200px] gap-3 px-5 md:grid-cols-3">
             <StatCard
               label={dict.home.statCycle}
@@ -106,18 +106,18 @@ export default async function HomePage() {
 
             <div className="mt-12 grid gap-3 lg:grid-cols-12">
               <Card hover className="lg:col-span-7">
-                <div className="mb-5 flex h-[42px] w-[42px] items-center justify-center rounded-[10px] border border-[#E5E5E5] bg-[#F3F3F3]">
-                  <Wallet size={18} className="text-[#111]" />
+                <div className="k-icon-well mb-5">
+                  <Wallet size={18} />
                 </div>
                 <h3 className="text-[28px] font-bold tracking-[-0.04em]">
                   {products[0].name}
                 </h3>
-                <p className="mt-3 max-w-xl text-[15px] text-[#666]">
+                <p className="mt-3 max-w-xl text-[15px] text-ink-secondary">
                   {products[0].description}
                 </p>
                 <div className="mt-8 grid gap-4 sm:grid-cols-3">
                   <div>
-                    <div className="text-[11px] uppercase tracking-[0.08em] text-[#999]">
+                    <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
                       {dict.common.amount}
                     </div>
                     <div className="mt-1 text-[15px] font-semibold">
@@ -126,7 +126,7 @@ export default async function HomePage() {
                     </div>
                   </div>
                   <div>
-                    <div className="text-[11px] uppercase tracking-[0.08em] text-[#999]">
+                    <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
                       {dict.common.term}
                     </div>
                     <div className="mt-1 text-[15px] font-semibold">
@@ -134,7 +134,7 @@ export default async function HomePage() {
                     </div>
                   </div>
                   <div>
-                    <div className="text-[11px] uppercase tracking-[0.08em] text-[#999]">
+                    <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
                       {dict.common.monthlyRate}
                     </div>
                     <div className="mt-1 text-[15px] font-semibold">
@@ -150,8 +150,8 @@ export default async function HomePage() {
                     <h3 className="text-[20px] font-bold tracking-[-0.04em]">
                       {product.name}
                     </h3>
-                    <p className="mt-2 text-[14px] text-[#666]">{product.description}</p>
-                    <div className="mt-4 text-[12px] text-[#999]">
+                    <p className="mt-2 text-[14px] text-ink-secondary">{product.description}</p>
+                    <div className="mt-4 text-[12px] text-ink-tertiary">
                       {dict.common.upTo} {formatCurrency(product.maxAmount)} · {product.minTerm}–
                       {product.maxTerm} {dict.common.months}
                     </div>
@@ -177,13 +177,13 @@ export default async function HomePage() {
                   key={step.title}
                   className="rounded-[18px] border border-white/10 bg-white/[0.03] p-6"
                 >
-                  <div className="text-[11px] uppercase tracking-[0.12em] text-[#AFAFAF]">
+                  <div className="text-[11px] uppercase tracking-[0.12em] text-gold-light">
                     {dict.common.step} {index + 1}
                   </div>
-                  <h3 className="mt-4 text-[20px] font-bold tracking-[-0.04em]">
+                  <h3 className="mt-4 text-[20px] font-bold tracking-[-0.04em] text-white">
                     {step.title}
                   </h3>
-                  <p className="mt-3 text-[14px] leading-[1.6] text-[#AAAAAA]">
+                  <p className="mt-3 text-[14px] leading-[1.6] text-white/60">
                     {step.text}
                   </p>
                 </div>
@@ -207,14 +207,14 @@ export default async function HomePage() {
                   { icon: Smartphone, ...dict.home.requirementsItems[2] },
                 ].map((item) => (
                   <Card key={item.title} hover className="flex gap-4">
-                    <div className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-[10px] border border-[#E5E5E5] bg-[#F3F3F3]">
+                    <div className="k-icon-well shrink-0">
                       <item.icon size={18} />
                     </div>
                     <div>
                       <h3 className="text-[16px] font-semibold tracking-[-0.02em]">
                         {item.title}
                       </h3>
-                      <p className="mt-1 text-[14px] text-[#666]">{item.text}</p>
+                      <p className="mt-1 text-[14px] text-ink-secondary">{item.text}</p>
                     </div>
                   </Card>
                 ))}
@@ -223,7 +223,7 @@ export default async function HomePage() {
           </div>
         </section>
 
-        <section className="border-y border-[#F0F0F0] bg-[#FAFAFA] py-24">
+        <section className="border-y border-line bg-canvas py-24">
           <div className="mx-auto max-w-[1200px] px-5">
             <SectionHeading
               align="center"
@@ -235,10 +235,10 @@ export default async function HomePage() {
               {dict.home.adminFeatures.map((item) => (
                 <div
                   key={item}
-                  className="flex items-center gap-3 rounded-[18px] border border-[#E5E5E5] bg-white px-5 py-4"
+                  className="flex items-center gap-3 rounded-[18px] border border-line bg-surface px-5 py-4"
                 >
-                  <CheckCircle2 size={16} className="shrink-0 text-black" />
-                  <span className="text-[14px] text-[#333]">{item}</span>
+                  <CheckCircle2 size={16} className="shrink-0 text-gold" />
+                  <span className="text-[14px] text-ink">{item}</span>
                 </div>
               ))}
             </div>
@@ -266,7 +266,7 @@ export default async function HomePage() {
                   <h3 className="text-[16px] font-semibold tracking-[-0.02em]">
                     {item.q}
                   </h3>
-                  <p className="mt-2 text-[14px] text-[#666]">{item.a}</p>
+                  <p className="mt-2 text-[14px] text-ink-secondary">{item.a}</p>
                 </Card>
               ))}
             </div>
@@ -297,7 +297,7 @@ export default async function HomePage() {
                 </Button>
               </Link>
             </div>
-            <p className="mt-8 text-[13px] text-[#AFAFAF]">{dict.home.contactInfo}</p>
+            <p className="mt-8 text-[13px] text-ink-tertiary">{dict.home.contactInfo}</p>
           </div>
         </section>
       </main>

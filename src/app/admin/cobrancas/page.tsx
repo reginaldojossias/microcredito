@@ -31,7 +31,7 @@ export default async function AdminCobrancasPage() {
     >
       <Card className="mb-4">
         <h3 className="text-[18px] font-bold tracking-[-0.03em]">Regras configuráveis</h3>
-        <p className="mt-2 text-[14px] text-[#666]">
+        <p className="mt-2 text-[14px] text-ink-secondary">
           Juros de mora, períodos de tolerância e encargos seguem as regras da instituição.
         </p>
         <div className="mt-5 grid gap-3 sm:grid-cols-3">
@@ -42,9 +42,9 @@ export default async function AdminCobrancasPage() {
           ].map(([label, value]) => (
             <div
               key={label}
-              className="rounded-2xl border border-[#F0F0F0] bg-[#FAFAFA] p-4"
+              className="rounded-2xl border border-line bg-canvas p-4"
             >
-              <div className="text-[11px] uppercase tracking-[0.08em] text-[#999]">
+              <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
                 {label}
               </div>
               <div className="mt-2 text-[16px] font-semibold">{value}</div>
@@ -62,7 +62,7 @@ export default async function AdminCobrancasPage() {
                   <h3 className="text-[16px] font-semibold">{loan.reference}</h3>
                   <StatusPill status={loan.status} />
                 </div>
-                <p className="mt-2 text-[14px] text-[#666]">
+                <p className="mt-2 text-[14px] text-ink-secondary">
                   {loan.clientName} · vencimento {formatDate(loan.nextDueDate)} · saldo{" "}
                   {formatCurrency(loan.balance)}
                 </p>
@@ -73,7 +73,7 @@ export default async function AdminCobrancasPage() {
         ))}
         {!overdue.length ? (
           <Card>
-            <p className="text-[14px] text-[#666]">Sem empréstimos em atraso.</p>
+            <p className="text-[14px] text-ink-secondary">Sem empréstimos em atraso.</p>
           </Card>
         ) : null}
       </div>

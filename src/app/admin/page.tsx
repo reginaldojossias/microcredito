@@ -61,7 +61,7 @@ export default async function AdminDashboardPage() {
         <Card className="xl:col-span-2">
           <div className="mb-5 flex items-center justify-between">
             <h3 className="text-[18px] font-bold tracking-[-0.03em]">{dict.admin.analysisQueue}</h3>
-            <Link href="/admin/pedidos" className="text-[13px] font-medium">
+            <Link href="/admin/pedidos" className="k-link">
               {dict.client.viewAll} →
             </Link>
           </div>
@@ -70,11 +70,11 @@ export default async function AdminDashboardPage() {
               <Link
                 key={app.id}
                 href={`/admin/pedidos/${app.id}`}
-                className="flex flex-col gap-3 rounded-2xl border border-[#E5E5E5] p-4 transition hover:border-[#D5D5D5] sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-3 rounded-2xl border border-line p-4 transition hover:border-line-strong sm:flex-row sm:items-center sm:justify-between"
               >
                 <div>
                   <div className="font-semibold">{app.reference}</div>
-                  <div className="text-[13px] text-[#666]">
+                  <div className="text-[13px] text-ink-secondary">
                     {app.clientName} · {formatCurrency(app.amount)}
                   </div>
                 </div>
@@ -82,7 +82,7 @@ export default async function AdminDashboardPage() {
               </Link>
             ))}
             {!queue.length ? (
-              <p className="text-[14px] text-[#666]">{dict.admin.emptyQueue}</p>
+              <p className="text-[14px] text-ink-secondary">{dict.admin.emptyQueue}</p>
             ) : null}
           </div>
         </Card>
@@ -93,18 +93,18 @@ export default async function AdminDashboardPage() {
           </h3>
           <div className="space-y-3">
             {overdue.map((loan) => (
-              <div key={loan.id} className="rounded-2xl border border-[#E5E5E5] p-4">
+              <div key={loan.id} className="rounded-2xl border border-line p-4">
                 <div className="font-semibold">{loan.reference}</div>
-                <div className="mt-1 text-[13px] text-[#666]">{loan.clientName}</div>
+                <div className="mt-1 text-[13px] text-ink-secondary">{loan.clientName}</div>
                 <div className="mt-2 text-[14px] font-medium">
                   {formatCurrency(loan.balance)}
                 </div>
               </div>
             ))}
             {!overdue.length ? (
-              <p className="text-[14px] text-[#666]">{dict.admin.noOverdue}</p>
+              <p className="text-[14px] text-ink-secondary">{dict.admin.noOverdue}</p>
             ) : null}
-            <Link href="/admin/cobrancas" className="inline-block text-[13px] font-medium">
+            <Link href="/admin/cobrancas" className="k-link inline-block">
               {dict.admin.openCollectionsLink} →
             </Link>
           </div>
@@ -117,15 +117,15 @@ export default async function AdminDashboardPage() {
           {auditLog.map((entry) => (
             <div
               key={entry.id}
-              className="flex flex-col gap-2 border-b border-[#F5F5F5] pb-3 last:border-0 sm:flex-row sm:justify-between"
+              className="flex flex-col gap-2 border-b border-line pb-3 last:border-0 sm:flex-row sm:justify-between"
             >
               <div>
                 <div className="font-medium">{entry.action}</div>
-                <div className="text-[13px] text-[#666]">
+                <div className="text-[13px] text-ink-secondary">
                   {entry.actor} · {entry.target} · {entry.detail}
                 </div>
               </div>
-              <div className="text-[12px] text-[#999]">
+              <div className="text-[12px] text-ink-tertiary">
                 {formatDateTime(entry.createdAt)}
               </div>
             </div>

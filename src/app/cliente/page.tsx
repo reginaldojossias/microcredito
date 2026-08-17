@@ -54,14 +54,14 @@ export default async function ClienteDashboardPage() {
         <Card className="xl:col-span-2">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <div className="text-[11px] uppercase tracking-[0.08em] text-[#999]">
+              <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
                 {dict.client.activeLoan}
               </div>
               <h2 className="mt-2 text-[28px] font-bold tracking-[-0.04em]">
                 {activeLoan ? activeLoan.reference : dict.client.noActiveLoan}
               </h2>
               {activeLoan ? (
-                <p className="mt-2 text-[14px] text-[#666]">
+                <p className="mt-2 text-[14px] text-ink-secondary">
                   {dict.client.nextInstallment} {formatCurrency(activeLoan.nextInstallment)} ·{" "}
                   {formatDate(activeLoan.nextDueDate)}
                 </p>
@@ -80,9 +80,9 @@ export default async function ClienteDashboardPage() {
               ].map(([label, value]) => (
                 <div
                   key={label}
-                  className="rounded-2xl border border-[#F0F0F0] bg-[#FAFAFA] p-4"
+                  className="k-metric-tile"
                 >
-                  <div className="text-[11px] uppercase tracking-[0.08em] text-[#999]">
+                  <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
                     {label}
                   </div>
                   <div className="mt-2 text-[18px] font-semibold tracking-[-0.03em]">
@@ -106,38 +106,35 @@ export default async function ClienteDashboardPage() {
         <div className="grid gap-4">
           <Card>
             <div className="flex items-center gap-3">
-              <div className="flex h-[42px] w-[42px] items-center justify-center rounded-[10px] border border-[#E5E5E5] bg-[#F3F3F3]">
+              <div className="k-icon-well">
                 <FileText size={18} />
               </div>
               <div>
                 <div className="text-[13px] font-semibold">{dict.dashboard.clientNav.documents}</div>
-                <div className="text-[12px] text-[#999]">
+                <div className="text-[12px] text-ink-tertiary">
                   {docsPending} {dict.client.documentsToReview}
                 </div>
               </div>
             </div>
-            <Link href="/cliente/documentos" className="mt-4 inline-block text-[13px] font-medium">
+            <Link href="/cliente/documentos" className="k-link mt-4 inline-block">
               {dict.client.viewDocuments} →
             </Link>
           </Card>
           <Card>
             <div className="flex items-center gap-3">
-              <div className="flex h-[42px] w-[42px] items-center justify-center rounded-[10px] border border-[#E5E5E5] bg-[#F3F3F3]">
+              <div className="k-icon-well">
                 <Bell size={18} />
               </div>
               <div>
                 <div className="text-[13px] font-semibold">
                   {dict.dashboard.clientNav.notifications}
                 </div>
-                <div className="text-[12px] text-[#999]">
+                <div className="text-[12px] text-ink-tertiary">
                   {unread} {dict.client.unreadCount}
                 </div>
               </div>
             </div>
-            <Link
-              href="/cliente/notificacoes"
-              className="mt-4 inline-block text-[13px] font-medium"
-            >
+            <Link href="/cliente/notificacoes" className="k-link mt-4 inline-block">
               {dict.client.openInbox} →
             </Link>
           </Card>
@@ -157,22 +154,22 @@ export default async function ClienteDashboardPage() {
             </Link>
           </div>
           {openApp ? (
-            <div className="rounded-2xl border border-[#E5E5E5] p-5">
+            <div className="rounded-2xl border border-line p-5">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <div className="text-[15px] font-semibold">{openApp.reference}</div>
-                  <div className="text-[13px] text-[#666]">
+                  <div className="text-[13px] text-ink-secondary">
                     {openApp.productName} · {formatCurrency(openApp.amount)}
                   </div>
                 </div>
                 <StatusPill status={openApp.status} />
               </div>
-              <p className="mt-4 text-[13px] text-[#666]">
+              <p className="mt-4 text-[13px] text-ink-secondary">
                 {dict.client.updatedAt} {formatDate(openApp.updatedAt)}.
               </p>
             </div>
           ) : (
-            <p className="text-[14px] text-[#666]">{dict.client.noApplicationInReview}</p>
+            <p className="text-[14px] text-ink-secondary">{dict.client.noApplicationInReview}</p>
           )}
         </Card>
 
@@ -181,14 +178,14 @@ export default async function ClienteDashboardPage() {
             <h3 className="text-[18px] font-bold tracking-[-0.03em]">
               {dict.client.nextInstallmentTitle}
             </h3>
-            <Wallet size={18} className="text-[#999]" />
+            <Wallet size={18} className="text-gold" />
           </div>
           {nextInstallment ? (
             <div>
               <div className="text-[32px] font-bold tracking-[-0.04em]">
                 {formatCurrency(nextInstallment.amount)}
               </div>
-              <p className="mt-2 text-[14px] text-[#666]">
+              <p className="mt-2 text-[14px] text-ink-secondary">
                 {dict.client.installmentNumber} #{nextInstallment.number} · {dict.client.dueDate}{" "}
                 {formatDate(nextInstallment.dueDate)}
               </p>
@@ -197,7 +194,7 @@ export default async function ClienteDashboardPage() {
               </Link>
             </div>
           ) : (
-            <p className="text-[14px] text-[#666]">{dict.client.noPendingInstallments}</p>
+            <p className="text-[14px] text-ink-secondary">{dict.client.noPendingInstallments}</p>
           )}
         </Card>
       </div>

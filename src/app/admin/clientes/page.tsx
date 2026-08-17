@@ -22,39 +22,39 @@ export default async function AdminClientesPage() {
       <Card className="mb-4">
         <input
           placeholder="Pesquisar por nome, email ou documento..."
-          className="w-full rounded-xl border border-[#E5E5E5] px-4 py-3 text-[14px] outline-none focus:border-[#111]"
+          className="k-input"
         />
       </Card>
 
-      <div className="overflow-x-auto rounded-[18px] border border-[#E5E5E5] bg-white">
-        <table className="w-full min-w-[800px] text-left text-[13px]">
+      <div className="k-table-wrap">
+        <table className="k-table min-w-[800px]">
           <thead>
-            <tr className="border-b border-[#F0F0F0] text-[11px] uppercase tracking-[0.08em] text-[#999]">
-              <th className="px-5 py-4 font-medium">Cliente</th>
-              <th className="px-5 py-4 font-medium">Contacto</th>
-              <th className="px-5 py-4 font-medium">Rendimento</th>
-              <th className="px-5 py-4 font-medium">Desde</th>
-              <th className="px-5 py-4 font-medium">Estado</th>
-              <th className="px-5 py-4 font-medium">Verificação</th>
+            <tr>
+              <th>Cliente</th>
+              <th>Contacto</th>
+              <th>Rendimento</th>
+              <th>Desde</th>
+              <th>Estado</th>
+              <th>Verificação</th>
             </tr>
           </thead>
           <tbody>
             {clients.map((client) => (
-              <tr key={client.id} className="border-b border-[#F7F7F7]">
-                <td className="px-5 py-4">
+              <tr key={client.id}>
+                <td>
                   <div className="font-medium">{client.name}</div>
-                  <div className="text-[#999]">{client.idDocument}</div>
+                  <div className="text-ink-tertiary">{client.idDocument}</div>
                 </td>
-                <td className="px-5 py-4">
+                <td>
                   <div>{client.email}</div>
-                  <div className="text-[#999]">{client.phone}</div>
+                  <div className="text-ink-tertiary">{client.phone}</div>
                 </td>
-                <td className="px-5 py-4">{formatCurrency(client.income)}</td>
-                <td className="px-5 py-4">{formatDate(client.createdAt)}</td>
-                <td className="px-5 py-4">
+                <td>{formatCurrency(client.income)}</td>
+                <td>{formatDate(client.createdAt)}</td>
+                <td>
                   <StatusPill status={client.status} />
                 </td>
-                <td className="px-5 py-4">
+                <td>
                   <StatusPill status={client.verificationStatus} />
                 </td>
               </tr>

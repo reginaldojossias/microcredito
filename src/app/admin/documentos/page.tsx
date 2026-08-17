@@ -30,12 +30,12 @@ export default async function AdminDocumentosPage() {
                   <h3 className="text-[15px] font-semibold">{doc.name}</h3>
                   <StatusPill status={doc.status} />
                 </div>
-                <p className="mt-2 text-[13px] text-[#666]">
+                <p className="mt-2 text-[13px] text-ink-secondary">
                   {clientName[doc.clientId] ?? "Cliente"} · {doc.type} ·{" "}
                   {formatDate(doc.uploadedAt)}
                 </p>
                 {doc.notes ? (
-                  <p className="mt-2 text-[13px] text-[#777]">{doc.notes}</p>
+                  <p className="mt-2 text-[13px] text-ink-tertiary">{doc.notes}</p>
                 ) : null}
               </div>
               <DocumentReviewActions id={doc.id} />

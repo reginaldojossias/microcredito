@@ -27,7 +27,7 @@ export default async function NovoPedidoPage() {
         <Card className="max-w-2xl">
           <div
             role="alert"
-            className="rounded-xl border border-[#F5C2C2] bg-[#FFF5F5] px-4 py-3 text-[14px] text-[#B42318]"
+            className="rounded-xl border border-danger/30 bg-danger-soft px-4 py-3 text-[14px] text-danger"
           >
             <p className="font-medium">{dict.verification.blockedTitle}</p>
             <p className="mt-1">

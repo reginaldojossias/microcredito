@@ -39,7 +39,7 @@ export default async function EmprestimoDetalhePage({
           ["Saldo em aberto", formatCurrency(loan.balance)],
         ].map(([label, value]) => (
           <Card key={label}>
-            <div className="text-[11px] uppercase tracking-[0.08em] text-[#999]">
+            <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
               {label}
             </div>
             <div className="mt-2 text-[22px] font-bold tracking-[-0.04em]">{value}</div>
@@ -54,25 +54,25 @@ export default async function EmprestimoDetalhePage({
           </h3>
           <StatusPill status={loan.status} />
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[640px] text-left text-[13px]">
+        <div className="k-table-wrap">
+          <table className="k-table min-w-[640px]">
             <thead>
-              <tr className="border-b border-[#F0F0F0] text-[11px] uppercase tracking-[0.08em] text-[#999]">
-                <th className="pb-3 font-medium">#</th>
-                <th className="pb-3 font-medium">Vencimento</th>
-                <th className="pb-3 font-medium">Valor</th>
-                <th className="pb-3 font-medium">Pago</th>
-                <th className="pb-3 font-medium">Estado</th>
+              <tr>
+                <th>#</th>
+                <th>Vencimento</th>
+                <th>Valor</th>
+                <th>Pago</th>
+                <th>Estado</th>
               </tr>
             </thead>
             <tbody>
               {calendar.map((item) => (
-                <tr key={item.id} className="border-b border-[#F7F7F7]">
-                  <td className="py-4">{item.number}</td>
-                  <td className="py-4">{formatDate(item.dueDate)}</td>
-                  <td className="py-4">{formatCurrency(item.amount)}</td>
-                  <td className="py-4">{formatCurrency(item.paidAmount)}</td>
-                  <td className="py-4">
+                <tr key={item.id}>
+                  <td>{item.number}</td>
+                  <td>{formatDate(item.dueDate)}</td>
+                  <td>{formatCurrency(item.amount)}</td>
+                  <td>{formatCurrency(item.paidAmount)}</td>
+                  <td>
                     <StatusPill status={item.status} />
                   </td>
                 </tr>

@@ -28,19 +28,19 @@ export default async function AdminEmprestimosPage() {
                   <h3 className="text-[16px] font-semibold">{loan.reference}</h3>
                   <StatusPill status={loan.status} />
                 </div>
-                <p className="mt-2 text-[14px] text-[#666]">
+                <p className="mt-2 text-[14px] text-ink-secondary">
                   {loan.clientName} · desembolsado em {formatDate(loan.disbursedAt)}
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-6 text-left sm:text-right">
                 <div>
-                  <div className="text-[11px] uppercase tracking-[0.08em] text-[#999]">
+                  <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
                     Principal
                   </div>
                   <div className="mt-1 font-semibold">{formatCurrency(loan.principal)}</div>
                 </div>
                 <div>
-                  <div className="text-[11px] uppercase tracking-[0.08em] text-[#999]">
+                  <div className="text-[11px] uppercase tracking-[0.08em] text-ink-tertiary">
                     Saldo
                   </div>
                   <div className="mt-1 font-semibold">{formatCurrency(loan.balance)}</div>

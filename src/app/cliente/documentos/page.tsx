@@ -32,11 +32,11 @@ export default async function DocumentosPage() {
           >
             <div>
               <div className="text-[15px] font-semibold">{doc.name}</div>
-              <div className="mt-1 text-[13px] text-[#666]">
+              <div className="mt-1 text-[13px] text-ink-secondary">
                 {doc.type} · enviado em {formatDate(doc.uploadedAt)}
               </div>
               {doc.notes ? (
-                <p className="mt-2 text-[13px] text-[#777]">{doc.notes}</p>
+                <p className="mt-2 text-[13px] text-ink-tertiary">{doc.notes}</p>
               ) : null}
             </div>
             <StatusPill status={doc.status} />
@@ -44,7 +44,7 @@ export default async function DocumentosPage() {
         ))}
         {!docs.length ? (
           <Card>
-            <p className="text-[14px] text-[#666]">Ainda não enviou documentos.</p>
+            <p className="text-[14px] text-ink-secondary">Ainda não enviou documentos.</p>
           </Card>
         ) : null}
       </div>
